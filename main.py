@@ -7,19 +7,26 @@ def main():
 
     while True:
         pos = input('Enter the current and next position of the piece: ')
-        pos = pos.split(' ')
+        pos_split = pos.split(' ')
 
-        x_curr = pos[0][0]
-        y_curr = pos[0][1]
-        x_next = pos[1][0]
-        y_next = pos[1][1]
+        if len(pos) != 5 or len(pos_split) != 2:
+            print('Invalid positions!')
+            continue
 
-        status = chessboard.move(x_curr, y_curr, x_next, y_next)
+        x_curr = pos_split[0][0]
+        y_curr = int(pos_split[0][1])
+        x_next = pos_split[1][0]
+        y_next = int(pos_split[1][1])
 
-        if not status:
-            print('\nInvalid moviment!\n')
+        if x_curr not in chessboard.letters or x_next not in chessboard.letters:
+            print('Invalid positions!')
+            continue
 
-        chessboard.print_board()
+        try:
+            chessboard.move(x_curr, y_curr, x_next, y_next)
+            chessboard.print_board()
+        except Exception as ex:
+            print(ex)
 
 
 if __name__ == '__main__':
