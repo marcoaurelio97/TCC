@@ -1,0 +1,10 @@
+- exibição tabuleiro (OK)
+- movimento das peças
+    - peão (OK)
+    - torre
+    - cavalo (OK)
+    - bispo
+    - rainha
+    - rei
+- verificação do check
+- verificação do check mate

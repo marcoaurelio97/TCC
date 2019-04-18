@@ -3,9 +3,9 @@ from chessboard import *
 
 def main():
     chessboard = Chessboard()
-    chessboard.print_board()
 
     while True:
+        chessboard.print_board()
         pos = input('Enter the current and next position of the piece: ')
         pos_split = pos.split(' ')
 
@@ -24,7 +24,6 @@ def main():
 
         try:
             chessboard.move(x_curr, y_curr, x_next, y_next)
-            chessboard.print_board()
         except Exception as ex:
             print(ex)
 
