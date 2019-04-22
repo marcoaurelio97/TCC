@@ -44,7 +44,6 @@ class Chessboard:
             raise Exception('\nInvalid moviment!\n')
 
         moves = self.get_moves(piece, x_curr, y_curr)
-        print(moves)
 
         if [y_next, x_next] not in moves:
             raise Exception('\nInvalid moviment!\n')
@@ -65,52 +64,100 @@ class Chessboard:
         piece_upper = piece.upper()
 
         if piece_upper == 'P':
-            if piece == 'P':
-                moves.append([y + 1, x])
-
-                if y == 1:
-                    moves.append([y + 2, x])
-                if y < 7 and x < 7 and self.board[y + 1][x + 1] != EMPTY_STATE:
-                    moves.append([y + 1, x + 1])
-                if y < 7 and x < 7 and self.board[y + 1][x - 1] != EMPTY_STATE:
-                    moves.append([y + 1, x - 1])
-            else:
-                moves.append([y - 1, x])
-
-                if y == 6:
-                    moves.append([y - 2, x])
-                if y > 0 and x > 0 and self.board[y - 1][x - 1] != EMPTY_STATE:
-                    moves.append([y - 1, x - 1])
-                if y > 0 and x > 0 and self.board[y - 1][x + 1] != EMPTY_STATE:
-                    moves.append([y - 1, x + 1])
+            self.get_pawn_moves(piece, x, y, moves)
         elif piece_upper == 'R':
-            for i in range(8):
-                if 0 <= y + i < 8 and 0 <= x < 8 and not self.verify_piece_not_exists(x, y + i)\
-                        and [y + i, x] not in moves and self.board[y + i][x] != piece:
-                    moves.append([y + i, x])
-                if 0 <= y - i < 8 and 0 <= x < 8 and not self.verify_piece_not_exists(x, y - i)\
-                        and [y - i, x] not in moves and self.board[y - i][x] != piece:
-                    moves.append([y - i, x])
-                if 0 <= y < 8 and 0 <= x + i < 8 and not self.verify_piece_not_exists(x + i, y)\
-                        and [y, x + i] not in moves and self.board[y][x + i] != piece:
-                    moves.append([y, x + i])
-                if 0 <= y < 8 and 0 <= x - i < 8 and not self.verify_piece_not_exists(x - i, y)\
-                        and [y, x - i] not in moves and self.board[y][x - i] != piece:
-                    moves.append([y, x - i])
+            self.get_rook_moves(x, y, moves)
         elif piece_upper == 'N':
-            moves.append([y + 1, x + 2])
-            moves.append([y - 1, x + 2])
-            moves.append([y + 2, x + 1])
-            moves.append([y - 2, x + 1])
-            moves.append([y - 1, x - 2])
-            moves.append([y + 1, x - 2])
-            moves.append([y + 2, x - 1])
-            moves.append([y - 2, x - 1])
+            self.get_knight_moves(x, y, moves)
         elif piece_upper == 'B':
-            print('aaaaa')
+            self.get_bishop_moves(x, y, moves)
         elif piece_upper == 'K':
-            print('aaaaa')
+            self.get_king_moves(x, y, moves)
         elif piece_upper == 'Q':
-            print('aaaaa')
+            self.get_queen_moves(x, y, moves)
 
         return moves
+
+    def verify_moviment(self, piece, x, y):
+        next_piece = self.board[y][x]
+
+        if next_piece == EMPTY_STATE or next_piece.isupper() != piece.isupper():
+            return True
+
+        return False
+
+    def get_pawn_moves(self, piece, x, y, moves):
+        if piece.isupper():
+            if 0 <= x < 8 and 0 <= y < 8:
+                if self.board[y + 1][x] == EMPTY_STATE:
+                    moves.append([y + 1, x])
+
+                if y == 1 and self.board[y + 2][x] == EMPTY_STATE:
+                    moves.append([y + 2, x])
+                if self.board[y + 1][x + 1] != EMPTY_STATE and self.board[y + 1][x + 1] != piece:
+                    moves.append([y + 1, x + 1])
+                if self.board[y + 1][x - 1] != EMPTY_STATE and self.board[y + 1][x - 1] != piece:
+                    moves.append([y + 1, x - 1])
+        else:
+            if 0 < x < 8 and 0 < y < 8:
+                if self.board[y - 1][x] == EMPTY_STATE:
+                    moves.append([y - 1, x])
+
+                if y == 6 and self.board[y - 2][x] == EMPTY_STATE:
+                    moves.append([y - 2, x])
+                if self.board[y - 1][x - 1] != EMPTY_STATE and self.board[y - 1][x - 1] != piece:
+                    moves.append([y - 1, x - 1])
+                if self.board[y - 1][x + 1] != EMPTY_STATE and self.board[y - 1][x + 1] != piece:
+                    moves.append([y - 1, x + 1])
+
+    def get_rook_moves(self, x, y, moves):
+        for i in range(8):
+            if 0 <= y + i < 8 and 0 <= x < 8 and self.verify_piece_not_exists(x, y + i) \
+                    and [y + i, x] not in moves:
+                moves.append([y + i, x])
+            if 0 <= y - i < 8 and 0 <= x < 8 and self.verify_piece_not_exists(x, y - i) \
+                    and [y - i, x] not in moves:
+                moves.append([y - i, x])
+            if 0 <= y < 8 and 0 <= x + i < 8 and self.verify_piece_not_exists(x + i, y) \
+                    and [y, x + i] not in moves:
+                moves.append([y, x + i])
+            if 0 <= y < 8 and 0 <= x - i < 8 and self.verify_piece_not_exists(x - i, y) \
+                    and [y, x - i] not in moves:
+                moves.append([y, x - i])
+
+    @staticmethod
+    def get_knight_moves(x, y, moves):
+        moves.append([y + 1, x + 2])
+        moves.append([y - 1, x + 2])
+        moves.append([y + 2, x + 1])
+        moves.append([y - 2, x + 1])
+        moves.append([y - 1, x - 2])
+        moves.append([y + 1, x - 2])
+        moves.append([y + 2, x - 1])
+        moves.append([y - 2, x - 1])
+
+    def get_bishop_moves(self, x, y, moves):
+        for i in range(8):
+            if 0 <= y + i < 8 and 0 <= x + i < 8 and self.verify_piece_not_exists(x + i, y + i):
+                moves.append([y + i, x + i])
+            if 0 <= y - i < 8 and 0 <= x + i < 8 and self.verify_piece_not_exists(x + i, y - i):
+                moves.append([y - i, x + i])
+            if 0 <= y + i < 8 and 0 <= x - i < 8 and self.verify_piece_not_exists(x - i, y + i):
+                moves.append([y + i, x - i])
+            if 0 <= y - i < 8 and 0 <= x - i < 8 and self.verify_piece_not_exists(x - i, y - i):
+                moves.append([y - i, x - i])
+
+    def get_queen_moves(self, x, y, moves):
+        self.get_rook_moves(x, y, moves)
+        self.get_bishop_moves(x, y, moves)
+
+    @staticmethod
+    def get_king_moves(x, y, moves):
+        moves.append([y + 1, x - 1])
+        moves.append([y + 1, x])
+        moves.append([y + 1, x + 1])
+        moves.append([y, x - 1])
+        moves.append([y, x + 1])
+        moves.append([y - 1, x - 1])
+        moves.append([y - 1, x])
+        moves.append([y - 1, x + 1])

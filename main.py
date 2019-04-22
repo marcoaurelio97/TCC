@@ -1,16 +1,20 @@
 from chessboard import *
+from functions import *
 
 
 def main():
     chessboard = Chessboard()
+    cls()
 
     while True:
         chessboard.print_board()
         pos = input('Enter the current and next position of the piece: ')
         pos_split = pos.split(' ')
 
+        cls()
+
         if len(pos) != 5 or len(pos_split) != 2:
-            print('Invalid positions!')
+            print('\nInvalid positions!\n')
             continue
 
         x_curr = pos_split[0][0]
@@ -19,7 +23,7 @@ def main():
         y_next = int(pos_split[1][1])
 
         if x_curr not in chessboard.letters or x_next not in chessboard.letters:
-            print('Invalid positions!')
+            print('\nInvalid positions!\n')
             continue
 
         try:
