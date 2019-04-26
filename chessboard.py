@@ -40,6 +40,9 @@ class Chessboard:
         x_next = self.letters.index(x_next)
         piece = self.board[y_curr][x_curr]
 
+        if self.verify_false_coordinates(x_curr, y_curr, x_next, y_next):
+            raise Exception('\nInvalid moviment!\n')
+
         if self.verify_piece_not_exists(x_curr, y_curr):
             raise Exception('\nInvalid moviment!\n')
 
@@ -50,6 +53,15 @@ class Chessboard:
 
         self.board[y_next][x_next] = piece
         self.board[y_curr][x_curr] = EMPTY_STATE
+
+    @staticmethod
+    def verify_false_coordinates(x_curr, y_curr, x_next, y_next):
+        r = range(0, 8)
+
+        if x_curr not in r or y_curr not in r or x_next not in r or y_next not in r:
+            return True
+
+        return False
 
     def verify_piece_not_exists(self, x, y):
         piece = self.board[y][x]
@@ -88,27 +100,23 @@ class Chessboard:
 
     def get_pawn_moves(self, piece, x, y, moves):
         if piece.isupper():
-            if 0 <= x < 8 and 0 <= y < 8:
-                if self.board[y + 1][x] == EMPTY_STATE:
-                    moves.append([y + 1, x])
-
-                if y == 1 and self.board[y + 2][x] == EMPTY_STATE:
-                    moves.append([y + 2, x])
-                if self.board[y + 1][x + 1] != EMPTY_STATE and self.board[y + 1][x + 1] != piece:
-                    moves.append([y + 1, x + 1])
-                if self.board[y + 1][x - 1] != EMPTY_STATE and self.board[y + 1][x - 1] != piece:
-                    moves.append([y + 1, x - 1])
+            if y < 7 and self.board[y + 1][x] == EMPTY_STATE:
+                moves.append([y + 1, x])
+            if y == 1 and self.board[y + 2][x] == EMPTY_STATE:
+                moves.append([y + 2, x])
+            if x < 7 and y < 7 and self.board[y + 1][x + 1] != EMPTY_STATE and self.board[y + 1][x + 1].islower():
+                moves.append([y + 1, x + 1])
+            if x > 0 and y < 7 and self.board[y + 1][x - 1] != EMPTY_STATE and self.board[y + 1][x - 1].islower():
+                moves.append([y + 1, x - 1])
         else:
-            if 0 < x < 8 and 0 < y < 8:
-                if self.board[y - 1][x] == EMPTY_STATE:
-                    moves.append([y - 1, x])
-
-                if y == 6 and self.board[y - 2][x] == EMPTY_STATE:
-                    moves.append([y - 2, x])
-                if self.board[y - 1][x - 1] != EMPTY_STATE and self.board[y - 1][x - 1] != piece:
-                    moves.append([y - 1, x - 1])
-                if self.board[y - 1][x + 1] != EMPTY_STATE and self.board[y - 1][x + 1] != piece:
-                    moves.append([y - 1, x + 1])
+            if y > 0 and self.board[y - 1][x] == EMPTY_STATE:
+                moves.append([y - 1, x])
+            if y == 6 and self.board[y - 2][x] == EMPTY_STATE:
+                moves.append([y - 2, x])
+            if x > 0 and y > 0 and self.board[y - 1][x - 1] != EMPTY_STATE and self.board[y - 1][x - 1].isupper():
+                moves.append([y - 1, x - 1])
+            if x < 7 and y > 0 and self.board[y - 1][x + 1] != EMPTY_STATE and self.board[y - 1][x + 1].isupper():
+                moves.append([y - 1, x + 1])
 
     def get_rook_moves(self, x, y, moves):
         for i in range(8):

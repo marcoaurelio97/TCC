@@ -1,10 +1,16 @@
 - exibição tabuleiro (OK)
 - movimento das peças
-    - peão (OK)
-    - torre
-    - cavalo (OK)
-    - bispo
-    - rainha
-    - rei
+    - padrões
+        - peão
+        - torre
+        - cavalo
+        - bispo
+        - rainha
+        - rei
+    - específicos
+        - peão se tornando outra peça
+        - roque
 - verificação do check
 - verificação do check mate
+- pontos
+- turno dos jogadores
