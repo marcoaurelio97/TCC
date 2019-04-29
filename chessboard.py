@@ -47,6 +47,7 @@ class Chessboard:
             raise Exception('\nInvalid moviment!\n')
 
         moves = self.get_moves(piece, x_curr, y_curr)
+        print(moves)
 
         if [y_next, x_next] not in moves:
             raise Exception('\nInvalid moviment!\n')
@@ -78,7 +79,7 @@ class Chessboard:
         if piece_upper == 'P':
             self.get_pawn_moves(piece, x, y, moves)
         elif piece_upper == 'R':
-            self.get_rook_moves(x, y, moves)
+            self.get_rook_moves(piece, x, y, moves)
         elif piece_upper == 'N':
             self.get_knight_moves(x, y, moves)
         elif piece_upper == 'B':
@@ -90,19 +91,11 @@ class Chessboard:
 
         return moves
 
-    def verify_moviment(self, piece, x, y):
-        next_piece = self.board[y][x]
-
-        if next_piece == EMPTY_STATE or next_piece.isupper() != piece.isupper():
-            return True
-
-        return False
-
     def get_pawn_moves(self, piece, x, y, moves):
         if piece.isupper():
             if y < 7 and self.board[y + 1][x] == EMPTY_STATE:
                 moves.append([y + 1, x])
-            if y == 1 and self.board[y + 2][x] == EMPTY_STATE:
+            if y == 1 and self.board[y + 1][x] == EMPTY_STATE and self.board[y + 2][x] == EMPTY_STATE:
                 moves.append([y + 2, x])
             if x < 7 and y < 7 and self.board[y + 1][x + 1] != EMPTY_STATE and self.board[y + 1][x + 1].islower():
                 moves.append([y + 1, x + 1])
@@ -111,30 +104,84 @@ class Chessboard:
         else:
             if y > 0 and self.board[y - 1][x] == EMPTY_STATE:
                 moves.append([y - 1, x])
-            if y == 6 and self.board[y - 2][x] == EMPTY_STATE:
+            if y == 6 and self.board[y - 1][x] == EMPTY_STATE and self.board[y - 2][x] == EMPTY_STATE:
                 moves.append([y - 2, x])
             if x > 0 and y > 0 and self.board[y - 1][x - 1] != EMPTY_STATE and self.board[y - 1][x - 1].isupper():
                 moves.append([y - 1, x - 1])
             if x < 7 and y > 0 and self.board[y - 1][x + 1] != EMPTY_STATE and self.board[y - 1][x + 1].isupper():
                 moves.append([y - 1, x + 1])
 
-    def get_rook_moves(self, x, y, moves):
-        for i in range(8):
-            if 0 <= y + i < 8 and 0 <= x < 8 and self.verify_piece_not_exists(x, y + i) \
-                    and [y + i, x] not in moves:
-                moves.append([y + i, x])
-            if 0 <= y - i < 8 and 0 <= x < 8 and self.verify_piece_not_exists(x, y - i) \
-                    and [y - i, x] not in moves:
-                moves.append([y - i, x])
-            if 0 <= y < 8 and 0 <= x + i < 8 and self.verify_piece_not_exists(x + i, y) \
-                    and [y, x + i] not in moves:
-                moves.append([y, x + i])
-            if 0 <= y < 8 and 0 <= x - i < 8 and self.verify_piece_not_exists(x - i, y) \
-                    and [y, x - i] not in moves:
-                moves.append([y, x - i])
+    def get_rook_moves(self, piece, x, y, moves):
+        up = down = right = left = True
+        for i in range(1, 8):
+            if piece.isupper():
+                if up and y + i < 8:
+                    if self.board[y + i][x] != EMPTY_STATE:
+                        if self.board[y + i][x].islower():
+                            moves.append([y + i, x])
+                        up = False
+                    else:
+                        moves.append([y + i, x])
+
+                if down and y - i >= 0:
+                    if self.board[y - i][x] != EMPTY_STATE:
+                        if self.board[y - i][x].islower():
+                            moves.append([y - i, x])
+                        down = False
+                    else:
+                        moves.append([y - i, x])
+
+                if right and x + i < 8:
+                    if self.board[y][x + i] != EMPTY_STATE:
+                        if self.board[y][x + i].islower():
+                            moves.append([y, x + i])
+                        right = False
+                    else:
+                        moves.append([y, x + i])
+
+                if left and x - i >= 0:
+                    if self.board[y][x - i] != EMPTY_STATE:
+                        if self.board[y][x - i].islower():
+                            moves.append([y, x - i])
+                        left = False
+                    else:
+                        moves.append([y, x - i])
+            else:
+                if up and y - i >= 0:
+                    if self.board[y - i][x] != EMPTY_STATE:
+                        if self.board[y - i][x].isupper():
+                            moves.append([y - i, x])
+                        up = False
+                    else:
+                        moves.append([y - i, x])
+
+                if down and y + i < 8:
+                    if self.board[y + i][x] != EMPTY_STATE:
+                        if self.board[y + i][x].isupper():
+                            moves.append([y + i, x])
+                        down = False
+                    else:
+                        moves.append([y + i, x])
+
+                if right and x - i >= 0:
+                    if self.board[y][x - i] != EMPTY_STATE:
+                        if self.board[y][x - i].isupper():
+                            moves.append([y, x - i])
+                        right = False
+                    else:
+                        moves.append([y, x - i])
+
+                if left and x + i < 8:
+                    if self.board[y][x + i] != EMPTY_STATE:
+                        if self.board[y][x + i].isupper():
+                            moves.append([y, x + i])
+                        left = False
+                    else:
+                        moves.append([y, x + i])
 
     @staticmethod
     def get_knight_moves(x, y, moves):
+
         moves.append([y + 1, x + 2])
         moves.append([y - 1, x + 2])
         moves.append([y + 2, x + 1])

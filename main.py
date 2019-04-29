@@ -11,7 +11,7 @@ def main():
         pos = input('Enter the current and next position of the piece: ')
         pos_split = pos.split(' ')
 
-        cls()
+        # cls()
 
         if len(pos) != 5 or len(pos_split) != 2:
             print('\nInvalid positions!\n')

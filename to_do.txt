@@ -1,8 +1,8 @@
 - exibição tabuleiro (OK)
 - movimento das peças
     - padrões
-        - peão
-        - torre
+        - peão (OK)
+        - torre (OK)
         - cavalo
         - bispo
         - rainha
