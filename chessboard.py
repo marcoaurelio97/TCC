@@ -1,5 +1,4 @@
 import numpy as np
-from functions import *
 
 EMPTY_STATE = '.'
 
@@ -55,8 +54,7 @@ class Chessboard:
         self.board[y_next][x_next] = piece
         self.board[y_curr][x_curr] = EMPTY_STATE
 
-    @staticmethod
-    def verify_false_coordinates(x_curr, y_curr, x_next, y_next):
+    def verify_false_coordinates(self, x_curr, y_curr, x_next, y_next):
         r = range(0, 8)
 
         if x_curr not in r or y_curr not in r or x_next not in r or y_next not in r:
@@ -76,17 +74,17 @@ class Chessboard:
         moves = []
         piece_upper = piece.upper()
 
-        if piece_upper == 'P':
+        if piece_upper == 'P':  # TODO: pawn moves (OK)
             self.get_pawn_moves(piece, x, y, moves)
-        elif piece_upper == 'R':
+        elif piece_upper == 'R':  # TODO: rook moves (OK)
             self.get_rook_moves(piece, x, y, moves)
-        elif piece_upper == 'N':
+        elif piece_upper == 'N':  # TODO: knight moves (OK)
             self.get_knight_moves(x, y, moves)
-        elif piece_upper == 'B':
+        elif piece_upper == 'B':  # TODO: bishop moves
             self.get_bishop_moves(x, y, moves)
-        elif piece_upper == 'K':
+        elif piece_upper == 'K':  # TODO: king moves
             self.get_king_moves(x, y, moves)
-        elif piece_upper == 'Q':
+        elif piece_upper == 'Q':  # TODO: queen moves
             self.get_queen_moves(x, y, moves)
 
         return moves
@@ -179,40 +177,66 @@ class Chessboard:
                     else:
                         moves.append([y, x + i])
 
-    @staticmethod
-    def get_knight_moves(x, y, moves):
+    def get_knight_moves(self, x, y, moves):
+        if 0 <= y + 1 < 8 and 0 <= x + 2 < 8 and self.check_team(x, y, x + 2, y + 1):
+            moves.append([y + 1, x + 2])
+        if 0 <= y - 1 < 8 and 0 <= x + 2 < 8 and self.check_team(x, y, x + 2, y - 1):
+            moves.append([y - 1, x + 2])
+        if 0 <= y + 2 < 8 and 0 <= x + 1 < 8 and self.check_team(x, y, x + 1, y + 2):
+            moves.append([y + 2, x + 1])
+        if 0 <= y - 2 < 8 and 0 <= x + 1 < 8 and self.check_team(x, y, x + 1, y - 2):
+            moves.append([y - 2, x + 1])
+        if 0 <= y - 1 < 8 and 0 <= x - 2 < 8 and self.check_team(x, y, x - 2, y - 1):
+            moves.append([y - 1, x - 2])
+        if 0 <= y + 1 < 8 and 0 <= x - 2 < 8 and self.check_team(x, y, x - 2, y + 1):
+            moves.append([y + 1, x - 2])
+        if 0 <= y + 2 < 8 and 0 <= x - 1 < 8 and self.check_team(x, y, x - 1, y + 2):
+            moves.append([y + 2, x - 1])
+        if 0 <= y - 2 < 8 and 0 <= x - 1 < 8 and self.check_team(x, y, x - 1, y - 2):
+            moves.append([y - 2, x - 1])
 
-        moves.append([y + 1, x + 2])
-        moves.append([y - 1, x + 2])
-        moves.append([y + 2, x + 1])
-        moves.append([y - 2, x + 1])
-        moves.append([y - 1, x - 2])
-        moves.append([y + 1, x - 2])
-        moves.append([y + 2, x - 1])
-        moves.append([y - 2, x - 1])
+    def check_team(self, x_curr, y_curr, x_next, y_next):
+        piece_curr = self.board[y_curr][x_curr]
+        piece_next = self.board[y_next][x_next]
+
+        if piece_next == EMPTY_STATE:
+            return True
+        if piece_curr.isupper() == piece_next.isupper():
+            return False
+        elif piece_curr.islower() == piece_next.islower():
+            return False
+        else:
+            return True
 
     def get_bishop_moves(self, x, y, moves):
         for i in range(8):
-            if 0 <= y + i < 8 and 0 <= x + i < 8 and self.verify_piece_not_exists(x + i, y + i):
+            if 0 <= y + i < 8 and 0 <= x + i < 8 and self.check_team(x, y, x + i, y + i):
                 moves.append([y + i, x + i])
-            if 0 <= y - i < 8 and 0 <= x + i < 8 and self.verify_piece_not_exists(x + i, y - i):
+            if 0 <= y - i < 8 and 0 <= x + i < 8 and self.check_team(x, y, x + i, y - i):
                 moves.append([y - i, x + i])
-            if 0 <= y + i < 8 and 0 <= x - i < 8 and self.verify_piece_not_exists(x - i, y + i):
+            if 0 <= y + i < 8 and 0 <= x - i < 8 and self.check_team(x, y, x - i, y + i):
                 moves.append([y + i, x - i])
-            if 0 <= y - i < 8 and 0 <= x - i < 8 and self.verify_piece_not_exists(x - i, y - i):
+            if 0 <= y - i < 8 and 0 <= x - i < 8 and self.check_team(x, y, x - i, y - i):
                 moves.append([y - i, x - i])
 
     def get_queen_moves(self, x, y, moves):
         self.get_rook_moves(x, y, moves)
         self.get_bishop_moves(x, y, moves)
 
-    @staticmethod
-    def get_king_moves(x, y, moves):
-        moves.append([y + 1, x - 1])
-        moves.append([y + 1, x])
-        moves.append([y + 1, x + 1])
-        moves.append([y, x - 1])
-        moves.append([y, x + 1])
-        moves.append([y - 1, x - 1])
-        moves.append([y - 1, x])
-        moves.append([y - 1, x + 1])
+    def get_king_moves(self, x, y, moves):
+        if 0 <= y + 1 < 8 and 0 <= x - 1 < 8 and self.check_team(x, y, x - 1, y + 1):
+            moves.append([y + 1, x - 1])
+        if 0 <= y + 1 < 8 and 0 <= x < 8 and self.check_team(x, y, x, y + 1):
+            moves.append([y + 1, x])
+        if 0 <= y + 1 < 8 and 0 <= x + 1 < 8 and self.check_team(x, y, x + 1, y + 1):
+            moves.append([y + 1, x + 1])
+        if 0 <= y < 8 and 0 <= x - 1 < 8 and self.check_team(x, y, x - 1, y):
+            moves.append([y, x - 1])
+        if 0 <= y < 8 and 0 <= x + 1 < 8 and self.check_team(x, y, x + 1, y):
+            moves.append([y, x + 1])
+        if 0 <= y - 1 < 8 and 0 <= x - 1 < 8 and self.check_team(x, y, x - 1, y - 1):
+            moves.append([y - 1, x - 1])
+        if 0 <= y - 1 < 8 and 0 <= x < 8 and self.check_team(x, y, x, y - 1):
+            moves.append([y - 1, x])
+        if 0 <= y - 1 < 8 and 0 <= x + 1 < 8 and self.check_team(x, y, x + 1, y - 1):
+            moves.append([y - 1, x + 1])
