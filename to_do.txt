@@ -3,10 +3,10 @@
     - padrões
         - peão (OK)
         - torre (OK)
-        - cavalo
-        - bispo
-        - rainha
-        - rei
+        - cavalo (OK)
+        - bispo (OK)
+        - rainha (OK)
+        - rei (OK)
     - específicos
         - peão se tornando outra peça
         - roque

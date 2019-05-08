@@ -24,7 +24,6 @@ class Chessboard:
         ])
 
     def print_board(self):
-        # cls()
         count = 7
         for y in range(7, -1, -1):
             line = str(count) + '  '
@@ -77,14 +76,14 @@ class Chessboard:
         if piece_upper == 'P':  # TODO: pawn moves (OK)
             self.get_pawn_moves(piece, x, y, moves)
         elif piece_upper == 'R':  # TODO: rook moves (OK)
-            self.get_rook_moves(piece, x, y, moves)
+            self.get_rook_moves(x, y, moves)
         elif piece_upper == 'N':  # TODO: knight moves (OK)
             self.get_knight_moves(x, y, moves)
-        elif piece_upper == 'B':  # TODO: bishop moves
+        elif piece_upper == 'B':  # TODO: bishop moves (OK)
             self.get_bishop_moves(x, y, moves)
-        elif piece_upper == 'K':  # TODO: king moves
+        elif piece_upper == 'K':  # TODO: king moves (OK)
             self.get_king_moves(x, y, moves)
-        elif piece_upper == 'Q':  # TODO: queen moves
+        elif piece_upper == 'Q':  # TODO: queen moves (OK)
             self.get_queen_moves(x, y, moves)
 
         return moves
@@ -109,73 +108,40 @@ class Chessboard:
             if x < 7 and y > 0 and self.board[y - 1][x + 1] != EMPTY_STATE and self.board[y - 1][x + 1].isupper():
                 moves.append([y - 1, x + 1])
 
-    def get_rook_moves(self, piece, x, y, moves):
+    def get_rook_moves(self, x, y, moves):
         up = down = right = left = True
         for i in range(1, 8):
-            if piece.isupper():
-                if up and y + i < 8:
-                    if self.board[y + i][x] != EMPTY_STATE:
-                        if self.board[y + i][x].islower():
-                            moves.append([y + i, x])
-                        up = False
-                    else:
+            if up and y + i < 8:
+                if self.board[y + i][x] != EMPTY_STATE:
+                    if self.check_team(x, y, x, y + i):
                         moves.append([y + i, x])
+                    up = False
+                else:
+                    moves.append([y + i, x])
 
-                if down and y - i >= 0:
-                    if self.board[y - i][x] != EMPTY_STATE:
-                        if self.board[y - i][x].islower():
-                            moves.append([y - i, x])
-                        down = False
-                    else:
+            if down and y - i >= 0:
+                if self.board[y - i][x] != EMPTY_STATE:
+                    if self.check_team(x, y, x, y - i):
                         moves.append([y - i, x])
+                    down = False
+                else:
+                    moves.append([y - i, x])
 
-                if right and x + i < 8:
-                    if self.board[y][x + i] != EMPTY_STATE:
-                        if self.board[y][x + i].islower():
-                            moves.append([y, x + i])
-                        right = False
-                    else:
+            if right and x + i < 8:
+                if self.board[y][x + i] != EMPTY_STATE:
+                    if self.check_team(x, y, x + i, y):
                         moves.append([y, x + i])
+                    right = False
+                else:
+                    moves.append([y, x + i])
 
-                if left and x - i >= 0:
-                    if self.board[y][x - i] != EMPTY_STATE:
-                        if self.board[y][x - i].islower():
-                            moves.append([y, x - i])
-                        left = False
-                    else:
+            if left and x - i >= 0:
+                if self.board[y][x - i] != EMPTY_STATE:
+                    if self.check_team(x, y, x - i, y):
                         moves.append([y, x - i])
-            else:
-                if up and y - i >= 0:
-                    if self.board[y - i][x] != EMPTY_STATE:
-                        if self.board[y - i][x].isupper():
-                            moves.append([y - i, x])
-                        up = False
-                    else:
-                        moves.append([y - i, x])
-
-                if down and y + i < 8:
-                    if self.board[y + i][x] != EMPTY_STATE:
-                        if self.board[y + i][x].isupper():
-                            moves.append([y + i, x])
-                        down = False
-                    else:
-                        moves.append([y + i, x])
-
-                if right and x - i >= 0:
-                    if self.board[y][x - i] != EMPTY_STATE:
-                        if self.board[y][x - i].isupper():
-                            moves.append([y, x - i])
-                        right = False
-                    else:
-                        moves.append([y, x - i])
-
-                if left and x + i < 8:
-                    if self.board[y][x + i] != EMPTY_STATE:
-                        if self.board[y][x + i].isupper():
-                            moves.append([y, x + i])
-                        left = False
-                    else:
-                        moves.append([y, x + i])
+                    left = False
+                else:
+                    moves.append([y, x - i])
 
     def get_knight_moves(self, x, y, moves):
         if 0 <= y + 1 < 8 and 0 <= x + 2 < 8 and self.check_team(x, y, x + 2, y + 1):
@@ -209,15 +175,37 @@ class Chessboard:
             return True
 
     def get_bishop_moves(self, x, y, moves):
-        for i in range(8):
-            if 0 <= y + i < 8 and 0 <= x + i < 8 and self.check_team(x, y, x + i, y + i):
-                moves.append([y + i, x + i])
-            if 0 <= y - i < 8 and 0 <= x + i < 8 and self.check_team(x, y, x + i, y - i):
-                moves.append([y - i, x + i])
-            if 0 <= y + i < 8 and 0 <= x - i < 8 and self.check_team(x, y, x - i, y + i):
-                moves.append([y + i, x - i])
-            if 0 <= y - i < 8 and 0 <= x - i < 8 and self.check_team(x, y, x - i, y - i):
-                moves.append([y - i, x - i])
+        up_right = up_left = down_right = down_left = True
+
+        for i in range(1, 8):
+            if up_right and y + i < 8 and x + i < 8:
+                if self.board[y + i][x + i] != EMPTY_STATE:
+                    if self.check_team(x, y, x + i, y + i):
+                        moves.append([y + i, x + i])
+                    up_right = False
+                else:
+                    moves.append([y + i, x + i])
+            if up_left and y - i >= 0 and x + i < 8:
+                if self.board[y - i][x + i] != EMPTY_STATE:
+                    if self.check_team(x, y, x + i, y - i):
+                        moves.append([y - i, x + i])
+                    up_left = False
+                else:
+                    moves.append([y - i, x + i])
+            if down_right and y + i < 8 and x - i >= 0:
+                if self.board[y + i][x - i] != EMPTY_STATE:
+                    if self.check_team(x, y, x - i, y + i):
+                        moves.append([y + i, x - i])
+                    down_right = False
+                else:
+                    moves.append([y + i, x - i])
+            if down_left and y - i >= 0 and x - i >= 0:
+                if self.board[y - i][x - i] != EMPTY_STATE:
+                    if self.check_team(x, y, x - i, y - i):
+                        moves.append([y - i, x - i])
+                    down_left = False
+                else:
+                    moves.append([y - i, x - i])
 
     def get_queen_moves(self, x, y, moves):
         self.get_rook_moves(x, y, moves)
