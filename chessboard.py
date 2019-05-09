@@ -19,7 +19,7 @@ class Chessboard:
             ['.', '.', '.', '.', '.', '.', '.', '.'],
             ['.', '.', '.', '.', '.', '.', '.', '.'],
             ['.', '.', '.', '.', '.', '.', '.', '.'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['p', 'P', 'p', 'p', 'p', 'p', 'p', 'p'],
             ['r', 'n', 'b', 'k', 'q', 'b', 'n', 'r']
         ])
 
@@ -45,15 +45,17 @@ class Chessboard:
             raise Exception('\nInvalid moviment!\n')
 
         moves = self.get_moves(piece, x_curr, y_curr)
-        print(moves)
 
         if [y_next, x_next] not in moves:
             raise Exception('\nInvalid moviment!\n')
 
+        piece = self.verify_pawn_promotion(piece, y_next)
+
         self.board[y_next][x_next] = piece
         self.board[y_curr][x_curr] = EMPTY_STATE
 
-    def verify_false_coordinates(self, x_curr, y_curr, x_next, y_next):
+    @staticmethod
+    def verify_false_coordinates(x_curr, y_curr, x_next, y_next):
         r = range(0, 8)
 
         if x_curr not in r or y_curr not in r or x_next not in r or y_next not in r:
@@ -68,6 +70,25 @@ class Chessboard:
             return True
 
         return False
+
+    @staticmethod
+    def verify_pawn_promotion(piece, y_next):  # TODO: pawn promotion
+        piece_promotion = piece
+        if piece.lower() == 'p' and (y_next == 7 or y_next == 0):
+            while True:
+                print('\nWhich piece you want to promote your pawn?')
+                print('\nR -> Rook\nN -> Knight\nB -> Bishop\nQ -> Queen')
+                piece_choosed = input('\nPiece: ')
+
+                try:
+                    if piece_choosed.upper() not in ['R', 'N', 'B', 'Q']:
+                        raise Exception('\nPromotion piece invalid!')
+                    piece_promotion = piece_choosed
+                    break
+                except Exception as ex:
+                    print(ex)
+
+        return piece_promotion
 
     def get_moves(self, piece, x, y):
         moves = []
