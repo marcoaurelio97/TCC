@@ -13,4 +13,4 @@
 - verificação do check
 - verificação do check mate
 - pontos
-- turno dos jogadores
+- turno dos jogadores (OK)
