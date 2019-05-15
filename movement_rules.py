@@ -209,16 +209,3 @@ class Movement:
             moves.append([y - 1, x])
         if 0 <= y - 1 < 8 and 0 <= x + 1 < 8 and Movement.check_team(board, x, y, x + 1, y - 1):
             moves.append([y - 1, x + 1])
-
-    @staticmethod
-    def get_all_moves(board):
-        moves = []
-
-        for y in range(0, 8):
-            for x in range(0, 8):
-                if board[y][x] != EMPTY_STATE and board[y][x].islower():
-                    iteration_moves = Movement.get_moves(board, board[y][x], x, y)
-                    for k in iteration_moves:
-                        moves.append([y, Movement.letters[x], k[0], Movement.letters[k[1]]])
-
-        return moves
