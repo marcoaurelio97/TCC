@@ -5,7 +5,7 @@ def cls():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def get_coordinates():
+def get_player_move():
     pos = input('Enter the current and next position of the piece: ')
     pos_split = pos.split(' ')
 
@@ -17,4 +17,4 @@ def get_coordinates():
     x_next = pos_split[1][0].upper()
     y_next = int(pos_split[1][1])
 
-    return x_curr, y_curr, x_next, y_next
+    return y_curr, x_curr, y_next, x_next
