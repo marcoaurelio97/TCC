@@ -1,7 +1,18 @@
 import numpy as np
 from movement_rules import *
+import os
+import subprocess
 
 EMPTY_STATE = '.'
+
+
+def clear():
+    if os.name in ('nt','dos'):
+        subprocess.call("cls")
+    elif os.name in ('linux','osx','posix'):
+        subprocess.call("clear")
+    else:
+        print("\n") * 120
 
 
 class Chessboard:
@@ -25,6 +36,7 @@ class Chessboard:
         ])
 
     def print_board(self):
+        clear()
         count = 7
         for y in range(7, -1, -1):
             line = str(count) + '  '
@@ -36,22 +48,22 @@ class Chessboard:
 
     def move(self, x_curr, y_curr, x_next, y_next):
         if x_curr not in self.letters or x_next not in self.letters:
-            raise Exception('\nInvalid positions!\n')
+            raise Exception('Invalid positions!')
 
         x_curr = Movement().letters.index(x_curr)
         x_next = Movement().letters.index(x_next)
         piece = self.board[y_curr][x_curr]
 
         if Movement().verify_false_coordinates(x_curr, y_curr, x_next, y_next):
-            raise Exception('\nInvalid movement!\n')
+            raise Exception('Invalid movement!')
 
         if Movement().verify_piece_not_exists(self.board, x_curr, y_curr):
-            raise Exception('\nInvalid movement!\n')
+            raise Exception('Invalid movement!')
 
         moves = Movement().get_moves(self.board, piece, x_curr, y_curr)
 
         if [y_next, x_next] not in moves:
-            raise Exception('\nInvalid movement!\n')
+            raise Exception('Invalid movement!')
 
         piece = Movement().verify_pawn_promotion(piece, y_next)
 

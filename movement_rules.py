@@ -34,7 +34,7 @@ class Movement:
 
                 try:
                     if chosen_piece.upper() not in ['R', 'N', 'B', 'Q']:
-                        raise Exception('\nPromotion piece invalid!')
+                        raise Exception('Promotion piece invalid!')
                     piece_promotion = chosen_piece
                     break
                 except Exception as ex:

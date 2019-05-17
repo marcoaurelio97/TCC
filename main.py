@@ -1,7 +1,4 @@
-from chessboard import *
 from game import *
-from functions import *
-
 
 def main():
     game = Game()
@@ -9,5 +6,4 @@ def main():
 
 
 if __name__ == '__main__':
-    cls()
     main()

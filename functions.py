@@ -1,16 +1,9 @@
-import os
-
-
-def cls():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-
 def get_player_move():
     pos = input('Enter the current and next position of the piece: ')
     pos_split = pos.split(' ')
 
     if len(pos) != 5 or len(pos_split) != 2:
-        raise Exception('\nInvalid positions!\n')
+        raise Exception('Invalid positions!')
 
     x_curr = pos_split[0][0].upper()
     y_curr = int(pos_split[0][1])
