@@ -1,28 +1,44 @@
+from state import State
+from sys import maxsize as inf
+
 EMPTY_STATE = '.'
 
-from movement_rules import Movement
-import random
+AI = -1
+HUMAN = 1
 
 
 class Minimax:
 
     @staticmethod
     def get_minimax_move(chessboard):
-        moves = Movement.get_best_move(chessboard.board)
+        initial_state = State(chessboard.board)
+        move_score = Minimax.search(initial_state, 3, AI)
 
-        return random.choice(moves)
+        print("Best Score:\t")
+        print(move_score)
+
+        initial_state.generate_children()
+
+        for move in initial_state.children:
+            if move.score == move_score:
+                best_state = move
+
+        next_move = best_state.initial_y, best_state.initial_x, best_state.final_y, best_state.final_x
+
+        return next_move
 
     @staticmethod
-    def get_best_move(board):
-        moves = []
+    def search(state, depth, player):
+        print("\n")
+        print(state.score)
 
-        for y in range(0, 8):
-            for x in range(0, 8):
-                if board[y][x] != EMPTY_STATE and board[y][x].islower():
-                    iteration_moves = Movement.get_moves(board, board[y][x], x, y)
-                    for k in iteration_moves:
-                        moves.append([y, Movement.letters[x], k[0], Movement.letters[k[1]]])
+        if depth == 0:
+            return state.score
 
-        return moves
+        state.generate_children()
 
-    #https://github.com/Cledersonbc/tic-tac-toe-minimax/blob/master/py_version/minimax.py
+        for child in state.children:
+            if player == AI:
+                return max([Minimax.search(child, depth-1, -player)])
+            elif player == HUMAN:
+                return min([Minimax.search(child, depth-1, -player)])
