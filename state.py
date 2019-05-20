@@ -5,12 +5,12 @@ EMPTY_STATE = '.'
 
 
 class State:
-    initial_y, initial_x, final_y, final_x = None, None, None, None
+    initial_y = initial_x = final_y = final_x = None
     board = None
     children = None
     score = 0
 
-    def __init__(self, board=False, initial_y=None, initial_x=None, final_y=None, final_x=None):
+    def __init__(self, board, initial_y=None, initial_x=None, final_y=None, final_x=None):
         self.initial_y, self.initial_x, self.final_y, self.final_x = initial_y, initial_x, final_y, final_x
         self.board = board
         self.children = []

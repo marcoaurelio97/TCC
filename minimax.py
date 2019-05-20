@@ -1,5 +1,6 @@
 from state import State
 from math import inf as infinite
+from time import time
 
 EMPTY_STATE = '.'
 
@@ -12,7 +13,10 @@ class Minimax:
     @staticmethod
     def get_minimax_move(chessboard):
         initial_state = State(chessboard.board)
+
+        t = time()
         best_state = Minimax.search(initial_state, MINIMAX_DEPTH, AI)
+        input("Time spent: {} segundos | Press enter to continue...".format(time() - t))
 
         if best_state:
             next_move = best_state.initial_y, best_state.initial_x, best_state.final_y, best_state.final_x
