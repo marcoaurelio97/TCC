@@ -11,12 +11,12 @@ MINIMAX_DEPTH = 3
 class Minimax:
 
     @staticmethod
-    def get_minimax_move(chessboard):
+    def get_minimax_move(chessboard, player):
         initial_state = State(chessboard.board)
 
-        t = time()
-        best_state = Minimax.search(initial_state, MINIMAX_DEPTH, AI)
-        input("Time spent: {} segundos | Press enter to continue...".format(time() - t))
+        # t = time()
+        best_state = Minimax.search(initial_state, MINIMAX_DEPTH, player)
+        # input("Time spent: {} seconds | Press enter to continue...".format(time() - t))
 
         if best_state:
             next_move = best_state.initial_y, best_state.initial_x, best_state.final_y, best_state.final_x
@@ -33,7 +33,7 @@ class Minimax:
         if depth == 0:
             return state.score
 
-        state.generate_children()
+        state.generate_children(player)
 
         if player == AI:
             if depth == 1:
