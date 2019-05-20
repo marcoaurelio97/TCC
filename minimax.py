@@ -1,38 +1,30 @@
 from state import State
-from sys import maxsize as inf
+from math import inf as infinite
 
 EMPTY_STATE = '.'
 
 AI = -1
 HUMAN = 1
-
+MINIMAX_DEPTH = 3
 
 class Minimax:
 
     @staticmethod
     def get_minimax_move(chessboard):
         initial_state = State(chessboard.board)
-        move_score = Minimax.search(initial_state, 3, AI)
+        best_state = Minimax.search(initial_state, MINIMAX_DEPTH, AI)
 
-        # print("Best Score:\t{}".format(move_score))
+        if best_state:
+            next_move = best_state.initial_y, best_state.initial_x, best_state.final_y, best_state.final_x
 
-        initial_state.generate_children()
-
-        # Correct error
-        # local variable 'best_state' referenced before assignment
-
-        for move in initial_state.children:
-            if move.score <= move_score:
-                best_state = move
-
-        next_move = best_state.initial_y, best_state.initial_x, best_state.final_y, best_state.final_x
-
-        return next_move
+            return next_move
+        else:
+            for move in initial_state.children:
+                print("Score: {}".format(move.score))
+            raise Exception("Sorry but we could'n find the best move for this case!")
 
     @staticmethod
     def search(state, depth, player):
-        # print("--------------------- /{}/ -------------------".format(state.score))
-        # state.print_state()
 
         if depth == 0:
             return state.score
@@ -40,6 +32,39 @@ class Minimax:
         state.generate_children()
 
         if player == AI:
-            return max([Minimax.search(child, depth-1, -player) for child in state.children])
+            if depth == 1:
+                state.score = max([Minimax.search(child, depth-1, -player) for child in state.children])
+            elif depth == MINIMAX_DEPTH:
+                return_state = State([])
+                return_state.score = -infinite
+
+                for child in state.children:
+                    Minimax.search(child, depth - 1, -player)
+                    return_state = child if child.score > return_state.score else return_state
+                return return_state
+            else:
+                state.score = -infinite
+                for child in state.children:
+                    Minimax.search(child, depth - 1, -player)
+                    state.score = child.score if child.score > state.score else state.score
+                return state.score
         elif player == HUMAN:
-            return min([Minimax.search(child, depth-1, -player) for child in state.children])
+            if depth == 1:
+                state.score = min([Minimax.search(child, depth-1, -player) for child in state.children])
+            elif depth == MINIMAX_DEPTH:
+                return_state = State([])
+                return_state.score = +infinite
+
+                for child in state.children:
+                    Minimax.search(child, depth - 1, -player)
+                    return_state = child if child.score < return_state.score else return_state
+                return return_state
+            else:
+                state.score = +infinite
+                for child in state.children:
+                    Minimax.search(child, depth - 1, -player)
+                    state.score = child.score if child.score < state.score else state.score
+                return state.score
+
+
+
