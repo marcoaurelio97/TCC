@@ -37,7 +37,9 @@ class Minimax:
 
         if player == AI:
             if depth == 1:
-                state.score = max([Minimax.search(child, depth-1, -player) for child in state.children])
+                list_search = [Minimax.search(child, depth-1, -player) for child in state.children]
+                if list_search:
+                    state.score = max(list_search)
             elif depth == MINIMAX_DEPTH:
                 return_state = State([])
                 return_state.score = -infinite
@@ -54,7 +56,9 @@ class Minimax:
                 return state.score
         elif player == HUMAN:
             if depth == 1:
-                state.score = min([Minimax.search(child, depth-1, -player) for child in state.children])
+                list_search = [Minimax.search(child, depth-1, -player) for child in state.children]
+                if list_search:
+                    state.score = min(list_search)
             elif depth == MINIMAX_DEPTH:
                 return_state = State([])
                 return_state.score = +infinite
