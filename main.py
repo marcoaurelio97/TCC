@@ -1,7 +1,9 @@
 from game import *
 
+
 def main():
-    game = Game()
+    op = input("1 - AI vs AI\n2 - Player vs AI\n")
+    game = Game(op)
     game.run()
 
 
