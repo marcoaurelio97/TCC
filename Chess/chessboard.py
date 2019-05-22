@@ -1,5 +1,5 @@
 import numpy as np
-from movement_rules import *
+from Chess.movement_rules import *
 import os
 import subprocess
 

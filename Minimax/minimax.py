@@ -1,6 +1,5 @@
-from state import State
+from Minimax.state import State
 from math import inf as infinite
-from time import time
 
 EMPTY_STATE = '.'
 

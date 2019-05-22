@@ -1,4 +1,4 @@
-from movement_rules import Movement
+from Chess.movement_rules import Movement
 from copy import deepcopy
 
 EMPTY_STATE = '.'
