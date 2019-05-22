@@ -4,7 +4,6 @@ from minimax import *
 
 
 class Game:
-
     def __init__(self, op):
         self.chessboard = Chessboard()
         self.black_score = 0
