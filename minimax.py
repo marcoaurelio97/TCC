@@ -8,8 +8,8 @@ AI = -1
 HUMAN = 1
 MINIMAX_DEPTH = 3
 
-class Minimax:
 
+class Minimax:
     @staticmethod
     def get_minimax_move(chessboard, player):
         initial_state = State(chessboard.board)

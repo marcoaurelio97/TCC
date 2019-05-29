@@ -23,7 +23,6 @@ class Game:
                     self.chessboard.move(x_curr, y_curr, x_next, y_next)
                     self.chessboard.print_board()
 
-                # AI's Turn
                 if not self.game_over():
                     y_curr, x_curr, y_next, x_next = Minimax().get_minimax_move(self.chessboard, -1)
                     self.chessboard.move(x_curr, y_curr, x_next, y_next)

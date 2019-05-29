@@ -1,3 +1,7 @@
+import os
+import subprocess
+
+
 def get_player_move():
     pos = input('Enter the current and next position of the piece: ')
     pos_split = pos.split(' ')
@@ -11,3 +15,12 @@ def get_player_move():
     y_next = int(pos_split[1][1])
 
     return y_curr, x_curr, y_next, x_next
+
+
+def clear():
+    if os.name in ('nt', 'dos'):
+        subprocess.call("cls")
+    elif os.name in ('linux', 'osx', 'posix'):
+        subprocess.call("clear")
+    else:
+        print("\n") * 120
