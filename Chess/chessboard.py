@@ -1,8 +1,19 @@
+from Chess.movement_rules import *
 import numpy as np
-from movement_rules import *
-from functions import *
+import subprocess
+import os
+
 
 EMPTY_STATE = '.'
+
+
+def clear():
+    if os.name in ('nt', 'dos'):
+        subprocess.call("cls")
+    elif os.name in ('linux', 'osx', 'posix'):
+        subprocess.call("clear")
+    else:
+        print("\n") * 120
 
 
 class Chessboard:

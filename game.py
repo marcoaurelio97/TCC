@@ -1,6 +1,6 @@
-from chessboard import *
-from functions import *
-from minimax import *
+from Chess.chessboard import *
+from Minimax.minimax import *
+from Chess.player import *
 
 
 class Game:
