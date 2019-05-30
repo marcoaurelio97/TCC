@@ -68,6 +68,29 @@ class Penalties:
         [20, 30, 10, 0, 0, 10, 30, 20]
     ])
 
+    @staticmethod
+    def get_score_by_piece(piece, x, y):
+        score = 0
+
+        if piece.isLower():
+            x = 8 - x - 1
+            y = 8 - y - 1
+
+        if piece.lower() == 'p':
+            score = Penalties.pawns[y][x]
+        if piece.lower() == 'b':
+            score = Penalties.beshop[y][x]
+        if piece.lower() == 'n':
+            score = Penalties.knights[y][x]
+        if piece.lower() == 'r':
+            score = Penalties.rook[y][x]
+        if piece.lower() == 'q':
+            score = Penalties.queen[y][x]
+        if piece.lower() == 'k':
+            score = Penalties.king[y][x]
+
+        return score
+
     # king_endgame = np.array([
     #     [-50, -40, -30, -20, -20, -30, -40, -50],
     #     [-30, -20, -10, 0, 0, -10, -20, -30],

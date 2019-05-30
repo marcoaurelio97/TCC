@@ -3,8 +3,8 @@ from math import inf as infinite
 
 EMPTY_STATE = '.'
 
-AI = -1
-HUMAN = 1
+WHITE = -1
+BLACK = 1
 MINIMAX_DEPTH = 3
 
 class Minimax:
@@ -34,7 +34,7 @@ class Minimax:
 
         state.generate_children(player)
 
-        if player == AI:
+        if player == BLACK:
             if depth == 1:
                 list_search = [Minimax.search(child, depth-1, -player) for child in state.children]
                 if list_search:
@@ -53,7 +53,7 @@ class Minimax:
                     Minimax.search(child, depth - 1, -player)
                     state.score = child.score if child.score > state.score else state.score
                 return state.score
-        elif player == HUMAN:
+        elif player == WHITE:
             if depth == 1:
                 list_search = [Minimax.search(child, depth-1, -player) for child in state.children]
                 if list_search:
