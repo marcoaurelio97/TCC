@@ -72,14 +72,13 @@ class Penalties:
     def get_score_by_piece(piece, x, y):
         score = 0
 
-        if piece.isLower():
-            x = 8 - x - 1
+        if piece.islower():
             y = 8 - y - 1
 
         if piece.lower() == 'p':
             score = Penalties.pawns[y][x]
         if piece.lower() == 'b':
-            score = Penalties.beshop[y][x]
+            score = Penalties.bishop[y][x]
         if piece.lower() == 'n':
             score = Penalties.knights[y][x]
         if piece.lower() == 'r':

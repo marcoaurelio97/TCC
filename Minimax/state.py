@@ -13,6 +13,8 @@ class State:
     board = None
     children = None
     score = 0
+    material_score = 0
+    square_score = 0
 
     def __init__(self, board, initial_y=None, initial_x=None, final_y=None, final_x=None, player=None):
         self.player_turn = player
@@ -38,11 +40,7 @@ class State:
                             self.children.append(
                                 State(new_board, y, Movement.letters[x], next_y, Movement.letters[next_x], player))
 
-                            for child in self.children:
-                                child.print_state()
                     elif player == WHITE and self.board[y][x].isupper():
-                                print(child.score)
-                                input('toma no cu')
 
                         iteration_moves = Movement.get_moves(self.board, self.board[y][x], x, y)
                         for next_y, next_x in iteration_moves:
@@ -56,17 +54,12 @@ class State:
                             self.children.append(
                                 State(new_board, y, Movement.letters[x], next_y, Movement.letters[next_x], player))
 
-                            for child in self.children:
-                                child.print_state()
-                                print(child.score)
-                                input('toma no cu')
-
     def evaluate(self):
         if len(self.board) == 0:
             self.score = 0
         else:
             self.score += self.material()
-            # self.score += self.square()
+            self.score += self.square()
 
     def material(self):
         score = 0
@@ -81,26 +74,29 @@ class State:
                     elif piece.isupper():
                         score -= piece_values[piece.lower()]
 
+        self.material_score = score
+
         return score
 
     def square(self):
         score = 0
 
-        if self.player_turn:
-            for y in range(0, 8):
-                for x in range(0, 8):
-                    piece = self.board[y][x]
-                    if piece is not EMPTY_STATE:
-                        if self.player_turn == BLACK and self.board[y][x].islower():
-                            score += Penalties.get_score_by_piece(piece, x, y)
-                        elif self.player_turn == WHITE and self.board[y][x].isupper():
-                            score += Penalties.get_score_by_piece(piece, x, y)
+        for y in range(0, 8):
+            for x in range(0, 8):
+                piece = self.board[y][x]
+                if piece is not EMPTY_STATE:
+                    if self.player_turn == BLACK and piece.islower():
+                        score += Penalties.get_score_by_piece(piece, x, y)
+                    elif self.player_turn == WHITE and piece.isupper():
+                        score += Penalties.get_score_by_piece(piece, x, y)
+
+        self.square_score = score
 
         return score
 
     def print_state(self):
         count = 7
-        print('\n Score:\t' + str(self.score))
+        print('\n Score: {}\nMaterial: {}\nSquare: {}\n'.format(self.score, self.material_score, self.square_score))
         for y in range(7, -1, -1):
             line = str(count) + '  '
             count -= 1

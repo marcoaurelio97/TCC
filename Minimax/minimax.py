@@ -2,7 +2,6 @@ from Minimax.state import State
 from math import inf as infinite
 
 EMPTY_STATE = '.'
-
 WHITE = -1
 BLACK = 1
 MINIMAX_DEPTH = 3
@@ -28,7 +27,6 @@ class Minimax:
 
     @staticmethod
     def search(state, depth, player):
-
         if depth == 0:
             return state.score
 
