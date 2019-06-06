@@ -38,11 +38,12 @@ class State:
                             self.children.append(
                                 State(new_board, y, Movement.letters[x], next_y, Movement.letters[next_x], player))
 
-                            for child in self.children
-                            self.print_state()
-                            print(self.score)
-
+                            for child in self.children:
+                                child.print_state()
                     elif player == WHITE and self.board[y][x].isupper():
+                                print(child.score)
+                                input('toma no cu')
+
                         iteration_moves = Movement.get_moves(self.board, self.board[y][x], x, y)
                         for next_y, next_x in iteration_moves:
                             new_board = deepcopy(self.board)
@@ -54,6 +55,11 @@ class State:
 
                             self.children.append(
                                 State(new_board, y, Movement.letters[x], next_y, Movement.letters[next_x], player))
+
+                            for child in self.children:
+                                child.print_state()
+                                print(child.score)
+                                input('toma no cu')
 
     def evaluate(self):
         if len(self.board) == 0:
