@@ -4,7 +4,7 @@ from math import inf as infinite
 EMPTY_STATE = '.'
 WHITE = -1
 BLACK = 1
-MINIMAX_DEPTH = 3
+MINIMAX_DEPTH = 4
 
 
 class Minimax:
@@ -13,7 +13,7 @@ class Minimax:
         initial_state = State(chessboard.board)
 
         # t = time()
-        best_state = Minimax.search(initial_state, MINIMAX_DEPTH, player)
+        _, best_state = Minimax.search(initial_state, MINIMAX_DEPTH, player, -infinite, infinite)
         # input("Time spent: {} seconds | Press enter to continue...".format(time() - t))
 
         if best_state:
@@ -26,50 +26,29 @@ class Minimax:
             raise Exception("Sorry but we could'n find the best move for this case!")
 
     @staticmethod
-    def search(state, depth, player):
+    def search(state, depth, player, alpha, beta):
         if depth == 0:
-            return state.score
+            return state.score, ""
 
         state.generate_children(player)
+        best_value = -infinite if player == BLACK else infinite
+        for child in state.children:
+            eval_child, action_child = Minimax.search(child, depth-1, -player, alpha, beta)
 
-        if player == BLACK:
-            if depth == 1:
-                list_search = [Minimax.search(child, depth-1, -player) for child in state.children]
-                if list_search:
-                    state.score = max(list_search)
-            elif depth == MINIMAX_DEPTH:
-                return_state = State([])
-                return_state.score = -infinite
+            if player == BLACK and best_value < eval_child:
+                best_value = eval_child
+                action_target = child
+                alpha = max(alpha, best_value)
+                if beta <= alpha:
+                    break
 
-                for child in state.children:
-                    Minimax.search(child, depth - 1, -player)
-                    return_state = child if child.score > return_state.score else return_state
-                return return_state
-            else:
-                state.score = -infinite
-                for child in state.children:
-                    Minimax.search(child, depth - 1, -player)
-                    state.score = child.score if child.score > state.score else state.score
-                return state.score
-        elif player == WHITE:
-            if depth == 1:
-                list_search = [Minimax.search(child, depth-1, -player) for child in state.children]
-                if list_search:
-                    state.score = min(list_search)
-            elif depth == MINIMAX_DEPTH:
-                return_state = State([])
-                return_state.score = +infinite
+            elif player == WHITE and best_value > eval_child:
+                best_value = eval_child
+                action_target = child
+                beta = min(beta, best_value)
+                if beta <= alpha:
+                    break
 
-                for child in state.children:
-                    Minimax.search(child, depth - 1, -player)
-                    return_state = child if child.score < return_state.score else return_state
-                return return_state
-            else:
-                state.score = +infinite
-                for child in state.children:
-                    Minimax.search(child, depth - 1, -player)
-                    state.score = child.score if child.score < state.score else state.score
-                return state.score
-
+        return best_value, action_target
 
 

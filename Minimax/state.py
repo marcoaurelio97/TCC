@@ -59,7 +59,7 @@ class State:
             self.score = 0
         else:
             self.score += self.material()
-            self.score += self.square()
+            # self.score += self.square()
 
     def material(self):
         score = 0
@@ -104,3 +104,5 @@ class State:
                 line += ' ' + self.board[y][x]
             print(line)
         print('\n    A B C D E F G H\n')
+
+    #TODO verificar se o estado é terminal

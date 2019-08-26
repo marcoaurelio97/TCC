@@ -1,6 +1,7 @@
 from Chess.chessboard import *
 from Minimax.minimax import *
 from Chess.player import *
+import traceback
 
 
 class Game:
@@ -29,7 +30,8 @@ class Game:
                     self.chessboard.print_board()
 
             except Exception as ex:
-                input("{} - Press any key to continue...".format(ex))
+                # input("{} - Press any key to continue...".format(ex))
+                input(traceback.format_exc())
             if self.game_over():
                 break
 
