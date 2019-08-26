@@ -24,7 +24,7 @@ class Movement:
         return False
 
     @staticmethod
-    def verify_pawn_promotion(piece, y_next):  # TODO: pawn promotion
+    def verify_pawn_promotion(piece, y_next):
         piece_promotion = piece
         if piece.lower() == 'p' and (y_next == 7 or y_next == 0):
             while True:
@@ -84,7 +84,7 @@ class Movement:
                 moves.append([y - 1, x + 1])
 
     @staticmethod
-    def get_rook_moves( board, x, y, moves):
+    def get_rook_moves(board, x, y, moves):
         up = down = right = left = True
         for i in range(1, 8):
             if up and y + i < 8:
