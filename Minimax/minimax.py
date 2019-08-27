@@ -1,5 +1,6 @@
 from Minimax.state import State
 from math import inf as infinite
+# import time
 
 EMPTY_STATE = '.'
 WHITE = -1
@@ -14,7 +15,7 @@ class Minimax:
 
         # t = time()
         _, best_state = Minimax.search(initial_state, MINIMAX_DEPTH, player, -infinite, infinite)
-        # input("Time spent: {} seconds | Press enter to continue...".format(time() - t))
+        input("Time spent: {} seconds | Press enter to continue...")
 
         if best_state:
             next_move = best_state.initial_y, best_state.initial_x, best_state.final_y, best_state.final_x
@@ -30,6 +31,7 @@ class Minimax:
         if depth == 0:
             return state.score, ""
 
+        state.print_state()
         state.generate_children(player)
         best_value = -infinite if player == BLACK else infinite
         for child in state.children:

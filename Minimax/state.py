@@ -59,7 +59,7 @@ class State:
             self.score = 0
         else:
             self.score += self.material()
-            # self.score += self.square()
+            self.score += self.square()
 
     def material(self):
         score = 0
@@ -96,7 +96,7 @@ class State:
 
     def print_state(self):
         count = 7
-        print('\n Score: {}\nMaterial: {}\nSquare: {}\n'.format(self.score, self.material_score, self.square_score))
+        print('\n Score: {}\nMaterial: {}\nSquare: {}\nPlayer Turn: {}\n'.format(self.score, self.material_score, self.square_score, self.player_turn))
         for y in range(7, -1, -1):
             line = str(count) + '  '
             count -= 1
