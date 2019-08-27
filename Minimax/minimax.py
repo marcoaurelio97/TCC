@@ -6,7 +6,7 @@ EMPTY_STATE = '.'
 WHITE = -1
 BLACK = 1
 MINIMAX_DEPTH = 4
-
+node_count = 0
 
 class Minimax:
     @staticmethod
@@ -15,7 +15,9 @@ class Minimax:
 
         # t = time()
         _, best_state = Minimax.search(initial_state, MINIMAX_DEPTH, player, -infinite, infinite)
-        input("Time spent: {} seconds | Press enter to continue...")
+        global node_count
+        print(node_count)
+        # input("Time spent: {} seconds | Press enter to continue...")
 
         if best_state:
             next_move = best_state.initial_y, best_state.initial_x, best_state.final_y, best_state.final_x
@@ -31,9 +33,12 @@ class Minimax:
         if depth == 0:
             return state.score, ""
 
-        state.print_state()
+        global node_count
+        node_count += 1
+
         state.generate_children(player)
         best_value = -infinite if player == BLACK else infinite
+
         for child in state.children:
             eval_child, action_child = Minimax.search(child, depth-1, -player, alpha, beta)
 
