@@ -1,7 +1,9 @@
 from Chess.chessboard import *
 from Minimax.minimax import *
 from Chess.player import *
+import collections
 import traceback
+import numpy as np
 
 
 class Game:
@@ -17,7 +19,7 @@ class Game:
             try:
                 if not self.game_over():
                     if self.op == '1':
-                        y_curr, x_curr, y_next, x_next = Minimax().get_minimax_move(self.chessboard, 1)
+                        y_curr, x_curr, y_next, x_next = Minimax(4).get_minimax_move(self.chessboard, 1)
                     else:
                         y_curr, x_curr, y_next, x_next = get_player_move()
 
@@ -25,7 +27,7 @@ class Game:
                     self.chessboard.print_board()
 
                 if not self.game_over():
-                    y_curr, x_curr, y_next, x_next = Minimax().get_minimax_move(self.chessboard, -1)
+                    y_curr, x_curr, y_next, x_next = Minimax(5).get_minimax_move(self.chessboard, -1)
                     self.chessboard.move(x_curr, y_curr, x_next, y_next)
                     self.chessboard.print_board()
 
@@ -37,12 +39,16 @@ class Game:
 
     def game_over(self):
         count = 0
-        for y in range(0, 8):
-            for x in range(0, 8):
-                if self.chessboard.board[y][x] == 'K' or self.chessboard.board[y][x] == 'k':
-                    count += 1
 
-        if count == 1:
+        # input(type(self.chessboard.board))
+
+        count = (self.chessboard.board == 'k').sum()
+        if count == 0:
             return True
+
+        count = (self.chessboard.board == 'K').sum()
+        if count == 0:
+            return True
+
         return False
 
