@@ -7,7 +7,6 @@ BLACK = -1
 WHITE = 1
 
 
-
 class State:
     initial_y = initial_x = final_y = final_x = None
     board = None

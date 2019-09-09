@@ -6,11 +6,7 @@ EMPTY_STATE = '.'
 
 MINIMAZING_PLAYER = -1
 MAXIMAZING_PLAYER = 1
-
-WHITE = -1
-BLACK = 1
 MINIMAX_DEPTH = 4
-node_count = 0
 
 class Minimax:
 
@@ -22,7 +18,7 @@ class Minimax:
 
         t = time()
         _, best_state = Minimax.search(initial_state, self.depth, player, -infinite, infinite)
-        # input("Time spent: {} seconds | Press enter to continue...".format(time()-t))
+        input("Time spent: {} seconds | Press enter to continue...".format(time()-t))
 
         if best_state:
             next_move = best_state.initial_y, best_state.initial_x, best_state.final_y, best_state.final_x
