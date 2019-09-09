@@ -74,6 +74,7 @@ class Penalties:
 
         if piece.islower():
             y = 8 - y - 1
+            x = 8 - x - 1
 
         if piece.lower() == 'p':
             score = Penalties.pawns[y][x]

@@ -3,8 +3,14 @@ from math import inf as infinite
 from time import time
 
 EMPTY_STATE = '.'
+
 MINIMAZING_PLAYER = -1
 MAXIMAZING_PLAYER = 1
+
+WHITE = -1
+BLACK = 1
+MINIMAX_DEPTH = 4
+node_count = 0
 
 class Minimax:
 

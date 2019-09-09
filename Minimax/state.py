@@ -63,7 +63,7 @@ class State:
 
     def material(self):
         score = 0
-        piece_values = {'p': 1, 'b': 3, 'n': 3, 'r': 5, 'q': 9, 'k': 90}
+        piece_values = {'p': 10, 'b': 30, 'n': 30, 'r': 50, 'q': 90, 'k': 900}
 
         for y in range(0, 8):
             for x in range(0, 8):
