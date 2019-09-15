@@ -27,7 +27,7 @@ class Game:
                     self.chessboard.print_board()
 
                 if not self.game_over():
-                    y_curr, x_curr, y_next, x_next = Minimax(5).get_minimax_move(self.chessboard, -1)
+                    y_curr, x_curr, y_next, x_next = Minimax(3).get_minimax_move(self.chessboard, -1)
                     self.chessboard.move(x_curr, y_curr, x_next, y_next)
                     self.chessboard.print_board()
 
