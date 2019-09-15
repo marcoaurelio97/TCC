@@ -1,7 +1,6 @@
 from Chess.chessboard import *
 from Minimax.minimax import *
 from Chess.player import *
-import collections
 import traceback
 import numpy as np
 
@@ -32,23 +31,15 @@ class Game:
                     self.chessboard.print_board()
 
             except Exception as ex:
-                # input("{} - Press any key to continue...".format(ex))
                 input(traceback.format_exc())
             if self.game_over():
                 break
 
     def game_over(self):
-        count = 0
-
-        # input(type(self.chessboard.board))
-
-        count = (self.chessboard.board == 'k').sum()
-        if count == 0:
+        unique, counts = np.unique(self.chessboard.board, return_counts=True)
+        dict_counts = dict(zip(unique, counts))
+        print(dict_counts)
+        if dict_counts['k'] == 0 or dict_counts['K'] == 0:
             return True
-
-        count = (self.chessboard.board == 'K').sum()
-        if count == 0:
-            return True
-
         return False
 

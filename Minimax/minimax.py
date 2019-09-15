@@ -6,11 +6,7 @@ EMPTY_STATE = '.'
 
 MINIMAZING_PLAYER = -1
 MAXIMAZING_PLAYER = 1
-
-WHITE = -1
-BLACK = 1
 MINIMAX_DEPTH = 4
-node_count = 0
 
 class Minimax:
 
@@ -21,6 +17,7 @@ class Minimax:
         initial_state = State(chessboard.board)
 
         t = time()
+
         best_state = Minimax.search(initial_state, self.depth, player, -infinite, infinite)
         input("Time spent: {} seconds | Press enter to continue...".format(time()-t));
 
