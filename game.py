@@ -18,7 +18,7 @@ class Game:
                     if self.op == '1':
                         y_curr, x_curr, y_next, x_next = Minimax().get_minimax_move(self.chessboard, 1)
                     else:
-                        y_curr, x_curr, y_next, x_next = get_player_move()
+                        y_curr, x_curr, y_next, x_next = get_player_move(self.chessboard.board)
 
                     self.chessboard.move(x_curr, y_curr, x_next, y_next)
                     self.chessboard.print_board()
