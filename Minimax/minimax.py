@@ -18,8 +18,8 @@ class Minimax:
 
         t = time()
 
-        best_state = Minimax.search(initial_state, self.depth, player, -infinite, infinite)
-        input("Time spent: {} seconds | Press enter to continue...".format(time()-t));
+        best_state, _ = Minimax.search(initial_state, self.depth, player, -infinite, infinite)
+        #input("Time spent: {} seconds | Press enter to continue...".format(time()-t))
 
         if best_state:
             next_move = best_state.initial_y, best_state.initial_x, best_state.final_y, best_state.final_x
@@ -33,29 +33,28 @@ class Minimax:
     @staticmethod
     def search(state, depth, player, alpha, beta):
         if depth == 0:
-            return state
+            return '', state.get_score()
 
         state.generate_children(player)
-        state.print_state()
         best_value = -infinite if player == MAXIMAZING_PLAYER else infinite
 
         for child in state.children:
-            eval_state = Minimax.search(child, depth-1, -player, alpha, beta)
+            eval_state, eval_value = Minimax.search(child, depth-1, -player, alpha, beta)
 
-            if player == MAXIMAZING_PLAYER and best_value < eval_state.score:
-                best_value = eval_state.score
+            if player == MAXIMAZING_PLAYER and best_value < eval_value:
+                best_value = eval_value
                 best_state = child
                 alpha = max(alpha, best_value)
                 if beta <= alpha:
                     break
 
-            elif player == MINIMAZING_PLAYER and best_value > eval_state.score:
-                best_value = eval_state.score
+            elif player == MINIMAZING_PLAYER and best_value > eval_value:
+                best_value = eval_value
                 best_state = child
                 beta = min(beta, best_value)
                 if beta <= alpha:
                     break
 
-        return best_state
+        return best_state, best_value
 
 

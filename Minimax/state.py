@@ -61,10 +61,10 @@ class State:
             self.score += self.square()
 
             if len(self.children) > 0:
-                self.score += self.number_of_moves
+                self.score += self.number_of_moves * 10
             else:
                 self.generate_children(self.player_turn)
-                self.score += self.number_of_moves
+                self.score -= self.number_of_moves * 10
 
         return self.score
 
