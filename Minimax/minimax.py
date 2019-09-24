@@ -1,4 +1,5 @@
 from Minimax.state import State
+from database import Database
 from math import inf as infinite
 
 EMPTY_STATE = '.'
@@ -12,18 +13,17 @@ class Minimax:
     def get_minimax_move(chessboard, player):
         initial_state = State(chessboard.board)
 
-        # t = time()
-        best_state = Minimax.search(initial_state, MINIMAX_DEPTH, player)
-        # input("Time spent: {} seconds | Press enter to continue...".format(time() - t))
-
-        if best_state:
+        positions = Database().get("positions", chessboard.board)
+        if positions:
+            next_move = positions["y_curr"], positions["x_curr"], positions["y_next"], positions["x_next"]
+        else:
+            best_state = Minimax.search(initial_state, MINIMAX_DEPTH, player)
             next_move = best_state.initial_y, best_state.initial_x, best_state.final_y, best_state.final_x
 
-            return next_move
-        else:
-            for move in initial_state.children:
-                print("Score: {}".format(move.score))
-            raise Exception("Sorry but we could'n find the best move for this case!")
+            Database().insert("positions", chessboard.board, best_state.initial_y, best_state.initial_x,
+                              best_state.final_y, best_state.final_x)
+
+        return next_move
 
     @staticmethod
     def search(state, depth, player):
@@ -42,6 +42,8 @@ class Minimax:
                 return_state.score = -infinite
 
                 for child in state.children:
+                    Database().insert("positions", child.board, child.initial_y, child.initial_x,
+                                      child.final_y, child.final_x)
                     Minimax.search(child, depth - 1, -player)
                     return_state = child if child.score > return_state.score else return_state
                 return return_state
@@ -70,6 +72,3 @@ class Minimax:
                     Minimax.search(child, depth - 1, -player)
                     state.score = child.score if child.score < state.score else state.score
                 return state.score
-
-
-

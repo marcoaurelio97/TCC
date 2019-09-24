@@ -1,11 +1,11 @@
 from Chess.movement_rules import Movement
 from Minimax.penalties import Penalties
+from database import Database
 from copy import deepcopy
 
 EMPTY_STATE = '.'
 BLACK = -1
 WHITE = 1
-
 
 
 class State:

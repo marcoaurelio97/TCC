@@ -30,6 +30,7 @@ class Game:
 
             except Exception as ex:
                 input("{} - Press any key to continue...".format(ex))
+
             if self.game_over():
                 break
 
@@ -43,4 +44,3 @@ class Game:
         if count == 1:
             return True
         return False
-
