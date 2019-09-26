@@ -46,4 +46,4 @@ class State:
                                 State(new_board, y, Movement.letters[x], next_y, Movement.letters[next_x], player))
 
     def get_score(self):
-        return Evaluation().evaluate(self.board, self.player_turn)
+        return Evaluation().evaluate(self.board)

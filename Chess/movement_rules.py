@@ -84,12 +84,12 @@ class Movement:
                 moves.append([y - 1, x + 1])
 
     @staticmethod
-    def get_rook_moves(board, x, y, moves):
+    def get_rook_moves(board, x, y, moves, x_ray=False):
         up = down = right = left = True
         for i in range(1, 8):
             if up and y + i < 8:
                 if board[y + i][x] != EMPTY_STATE:
-                    if Movement.check_team(board, x, y, x, y + i):
+                    if Movement.check_team(board, x, y, x, y + i, x_ray):
                         moves.append([y + i, x])
                     up = False
                 else:
@@ -97,7 +97,7 @@ class Movement:
 
             if down and y - i >= 0:
                 if board[y - i][x] != EMPTY_STATE:
-                    if Movement.check_team(board, x, y, x, y - i):
+                    if Movement.check_team(board, x, y, x, y - i, x_ray):
                         moves.append([y - i, x])
                     down = False
                 else:
@@ -105,7 +105,7 @@ class Movement:
 
             if right and x + i < 8:
                 if board[y][x + i] != EMPTY_STATE:
-                    if Movement.check_team(board, x, y, x + i, y):
+                    if Movement.check_team(board, x, y, x + i, y, x_ray):
                         moves.append([y, x + i])
                     right = False
                 else:
@@ -113,7 +113,7 @@ class Movement:
 
             if left and x - i >= 0:
                 if board[y][x - i] != EMPTY_STATE:
-                    if Movement.check_team(board, x, y, x - i, y):
+                    if Movement.check_team(board, x, y, x - i, y, x_ray):
                         moves.append([y, x - i])
                     left = False
                 else:
@@ -139,10 +139,12 @@ class Movement:
             moves.append([y - 2, x - 1])
 
     @staticmethod
-    def check_team(board, x_curr, y_curr, x_next, y_next):
+    def check_team(board, x_curr, y_curr, x_next, y_next, x_ray=False):
         piece_curr = board[y_curr][x_curr]
         piece_next = board[y_next][x_next]
 
+        if x_ray:
+            return True
         if piece_next == EMPTY_STATE:
             return True
         if piece_curr.isupper() == piece_next.isupper():
@@ -153,43 +155,43 @@ class Movement:
             return True
 
     @staticmethod
-    def get_bishop_moves( board, x, y, moves):
+    def get_bishop_moves(board, x, y, moves, x_ray=False):
         up_right = up_left = down_right = down_left = True
 
         for i in range(1, 8):
             if up_right and y + i < 8 and x + i < 8:
                 if board[y + i][x + i] != EMPTY_STATE:
-                    if Movement.check_team(board, x, y, x + i, y + i):
+                    if Movement.check_team(board, x, y, x + i, y + i, x_ray):
                         moves.append([y + i, x + i])
                     up_right = False
                 else:
                     moves.append([y + i, x + i])
             if up_left and y - i >= 0 and x + i < 8:
                 if board[y - i][x + i] != EMPTY_STATE:
-                    if Movement.check_team(board, x, y, x + i, y - i):
+                    if Movement.check_team(board, x, y, x + i, y - i, x_ray):
                         moves.append([y - i, x + i])
                     up_left = False
                 else:
                     moves.append([y - i, x + i])
             if down_right and y + i < 8 and x - i >= 0:
                 if board[y + i][x - i] != EMPTY_STATE:
-                    if Movement.check_team(board, x, y, x - i, y + i):
+                    if Movement.check_team(board, x, y, x - i, y + i, x_ray):
                         moves.append([y + i, x - i])
                     down_right = False
                 else:
                     moves.append([y + i, x - i])
             if down_left and y - i >= 0 and x - i >= 0:
                 if board[y - i][x - i] != EMPTY_STATE:
-                    if Movement.check_team(board, x, y, x - i, y - i):
+                    if Movement.check_team(board, x, y, x - i, y - i, x_ray):
                         moves.append([y - i, x - i])
                     down_left = False
                 else:
                     moves.append([y - i, x - i])
 
     @staticmethod
-    def get_queen_moves(board, x, y, moves):
-        Movement.get_rook_moves(board, x, y, moves)
-        Movement.get_bishop_moves(board, x, y, moves)
+    def get_queen_moves(board, x, y, moves, x_ray=False):
+        Movement.get_rook_moves(board, x, y, moves, x_ray)
+        Movement.get_bishop_moves(board, x, y, moves, x_ray)
 
     @staticmethod
     def get_king_moves(board, x, y, moves):

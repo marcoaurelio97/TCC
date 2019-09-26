@@ -6,7 +6,7 @@ EMPTY_STATE = '.'
 
 MINIMAZING_PLAYER = -1
 MAXIMAZING_PLAYER = 1
-MINIMAX_DEPTH = 4
+
 
 class Minimax:
 

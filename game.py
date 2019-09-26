@@ -18,7 +18,7 @@ class Game:
             try:
                 if not self.game_over():
                     if self.op == '1':
-                        y_curr, x_curr, y_next, x_next = Minimax(3).get_minimax_move(self.chessboard, 1)
+                        y_curr, x_curr, y_next, x_next = Minimax(2).get_minimax_move(self.chessboard, 1)
                     else:
                         y_curr, x_curr, y_next, x_next = get_player_move()
 
@@ -26,7 +26,7 @@ class Game:
                     self.chessboard.print_board()
 
                 if not self.game_over():
-                    y_curr, x_curr, y_next, x_next = Minimax(3).get_minimax_move(self.chessboard, -1)
+                    y_curr, x_curr, y_next, x_next = Minimax(2).get_minimax_move(self.chessboard, -1)
                     self.chessboard.move(x_curr, y_curr, x_next, y_next)
                     self.chessboard.print_board()
 
@@ -38,7 +38,7 @@ class Game:
     def game_over(self):
         unique, counts = np.unique(self.chessboard.board, return_counts=True)
         dict_counts = dict(zip(unique, counts))
-        #print(dict_counts)
+
         if dict_counts['k'] == 0 or dict_counts['K'] == 0:
             return True
         return False
