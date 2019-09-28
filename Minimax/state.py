@@ -1,33 +1,25 @@
 from Chess.movement_rules import Movement
-from Minimax.penalties import Penalties
+from Minimax.evaluation import Evaluation
 from copy import deepcopy
 
 EMPTY_STATE = '.'
-BLACK = -1
-WHITE = 1
-
+MINIMAZING_PLAYER = -1 #black
+MAXIMAZING_PLAYER = 1 #white
 
 
 class State:
-    initial_y = initial_x = final_y = final_x = None
-    board = None
-    children = None
-    score = 0
-    material_score = 0
-    square_score = 0
 
     def __init__(self, board, initial_y=None, initial_x=None, final_y=None, final_x=None, player=None):
         self.player_turn = player
         self.initial_y, self.initial_x, self.final_y, self.final_x = initial_y, initial_x, final_y, final_x
         self.board = board
         self.children = []
-        self.evaluate()
 
     def generate_children(self, player):
         for y in range(0, 8):
             for x in range(0, 8):
                 if self.board[y][x] != EMPTY_STATE:
-                    if player == BLACK and self.board[y][x].islower():
+                    if player == MINIMAZING_PLAYER and self.board[y][x].islower():
                         iteration_moves = Movement.get_moves(self.board, self.board[y][x], x, y)
                         for next_y, next_x in iteration_moves:
                             new_board = deepcopy(self.board)
@@ -40,8 +32,7 @@ class State:
                             self.children.append(
                                 State(new_board, y, Movement.letters[x], next_y, Movement.letters[next_x], player))
 
-                    elif player == WHITE and self.board[y][x].isupper():
-
+                    elif player == MAXIMAZING_PLAYER and self.board[y][x].isupper():
                         iteration_moves = Movement.get_moves(self.board, self.board[y][x], x, y)
                         for next_y, next_x in iteration_moves:
                             new_board = deepcopy(self.board)
@@ -54,53 +45,5 @@ class State:
                             self.children.append(
                                 State(new_board, y, Movement.letters[x], next_y, Movement.letters[next_x], player))
 
-    def evaluate(self):
-        if len(self.board) == 0:
-            self.score = 0
-        else:
-            self.score += self.material()
-            self.score += self.square()
-
-    def material(self):
-        score = 0
-        piece_values = {'p': 1, 'b': 3, 'n': 3, 'r': 5, 'q': 9, 'k': 90}
-
-        for y in range(0, 8):
-            for x in range(0, 8):
-                piece = self.board[y][x]
-                if piece is not EMPTY_STATE:
-                    if piece.islower():
-                        score += piece_values[piece]
-                    elif piece.isupper():
-                        score -= piece_values[piece.lower()]
-
-        self.material_score = score
-
-        return score
-
-    def square(self):
-        score = 0
-
-        for y in range(0, 8):
-            for x in range(0, 8):
-                piece = self.board[y][x]
-                if piece is not EMPTY_STATE:
-                    if self.player_turn == BLACK and piece.islower():
-                        score += Penalties.get_score_by_piece(piece, x, y)
-                    elif self.player_turn == WHITE and piece.isupper():
-                        score += Penalties.get_score_by_piece(piece, x, y)
-
-        self.square_score = score
-
-        return score
-
-    def print_state(self):
-        count = 7
-        print('\n Score: {}\nMaterial: {}\nSquare: {}\n'.format(self.score, self.material_score, self.square_score))
-        for y in range(7, -1, -1):
-            line = str(count) + '  '
-            count -= 1
-            for x in range(8):
-                line += ' ' + self.board[y][x]
-            print(line)
-        print('\n    A B C D E F G H\n')
+    def get_score(self):
+        return Evaluation().evaluate(self.board)

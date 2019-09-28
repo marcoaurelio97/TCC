@@ -1,6 +1,8 @@
 from Chess.chessboard import *
 from Minimax.minimax import *
 from Chess.player import *
+import traceback
+import numpy as np
 
 
 class Game:
@@ -16,7 +18,7 @@ class Game:
             try:
                 if not self.game_over():
                     if self.op == '1':
-                        y_curr, x_curr, y_next, x_next = Minimax().get_minimax_move(self.chessboard, 1)
+                        y_curr, x_curr, y_next, x_next = Minimax(2).get_minimax_move(self.chessboard, 1)
                     else:
                         y_curr, x_curr, y_next, x_next = get_player_move()
 
@@ -24,23 +26,20 @@ class Game:
                     self.chessboard.print_board()
 
                 if not self.game_over():
-                    y_curr, x_curr, y_next, x_next = Minimax().get_minimax_move(self.chessboard, -1)
+                    y_curr, x_curr, y_next, x_next = Minimax(3).get_minimax_move(self.chessboard, -1)
                     self.chessboard.move(x_curr, y_curr, x_next, y_next)
                     self.chessboard.print_board()
 
             except Exception as ex:
-                input("{} - Press any key to continue...".format(ex))
+                input(traceback.format_exc())
             if self.game_over():
                 break
 
     def game_over(self):
-        count = 0
-        for y in range(0, 8):
-            for x in range(0, 8):
-                if self.chessboard.board[y][x] == 'K' or self.chessboard.board[y][x] == 'k':
-                    count += 1
+        black_king = np.count_nonzero(self.chessboard.board == 'k')
+        white_king = np.count_nonzero(self.chessboard.board == 'K')
 
-        if count == 1:
+        if not white_king or not black_king:
             return True
         return False
 
