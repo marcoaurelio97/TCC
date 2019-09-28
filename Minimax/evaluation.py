@@ -194,18 +194,20 @@ class Evaluation:
 
         return possible_attack
 
-    def pawns_structure(self, board, player_turn):
+    @staticmethod
+    def pawns_structure(board, player_turn):
         score = 0
 
-        score -= self.isolated_pawn(board, player_turn)
-        score -= self.doubled_pawn(board, player_turn)
-        score -= self.backward_pawn(board, player_turn)
+        score -= Evaluation().isolated_pawn(board, player_turn)
+        score -= Evaluation().doubled_pawn(board, player_turn)
+        score -= Evaluation().backward_pawn(board, player_turn)
+        # score += Evaluation().connected_pawn_bonus(board, player_turn)
 
         return score
 
     @staticmethod
     def isolated_pawn(board, player_turn):
-        score = 0
+        isolated_score = 0
         pawn_positions = np.where(board == "p" if player_turn == BLACK else board == "P")
         pawn = "p" if player_turn == BLACK else "P"
 
@@ -229,13 +231,13 @@ class Evaluation:
                     isolated = True
 
             if isolated:
-                score += 5
+                isolated_score += 5
 
-        return score
+        return isolated_score
 
     @staticmethod
     def doubled_pawn(board, player_turn):
-        score = 0
+        doubled_score = 0
         pawn_positions = np.where(board == "p" if player_turn == BLACK else board == "P")
 
         for i in range(0, len(pawn_positions[0])):
@@ -249,7 +251,7 @@ class Evaluation:
                 elif x_pawn < 7 and board[y_pawn][x_pawn + 1] == "P":
                     continue
                 else:
-                    score += 11
+                    doubled_score += 11
             elif player_turn == BLACK:
                 if y_pawn > 0 and board[y_pawn - 1][x_pawn] != "p":
                     continue
@@ -258,13 +260,13 @@ class Evaluation:
                 elif x_pawn < 7 and board[y_pawn][x_pawn + 1] == "p":
                     continue
                 else:
-                    score += 11
+                    doubled_score += 11
 
-        return score
+        return doubled_score
 
     @staticmethod
     def backward_pawn(board, player_turn):
-        score = 0
+        backward_score = 0
         pawn_positions = np.where(board == "p" if player_turn == BLACK else board == "P")
 
         for i in range(0, len(pawn_positions[0])):
@@ -273,14 +275,14 @@ class Evaluation:
 
             if player_turn == WHITE:
                 for y in range(0, y_pawn + 1):
-                    if (x_pawn > 0 and board[y][x_pawn - 1] == "P") \
+                    if (x_pawn > 0 and board[y][x_pawn - 1] == "P")\
                             or (x_pawn < 7 and board[y][x_pawn + 1] == "P"):
                         backward = True
                         break
                 if backward or Evaluation().isolated_pawn(board, player_turn):
                     continue
                 if y_pawn < 6:
-                    if (x_pawn > 0 and board[y_pawn + 2][x_pawn - 1] == "p") \
+                    if (x_pawn > 0 and board[y_pawn + 2][x_pawn - 1] == "p")\
                             or (x_pawn < 7 and board[y_pawn + 2][x_pawn + 1] == "p"):
                         backward = True
                 elif y_pawn < 7:
@@ -289,14 +291,14 @@ class Evaluation:
 
             if player_turn == BLACK:
                 for y in range(y_pawn, 8):
-                    if (x_pawn > 0 and board[y][x_pawn - 1] == "p") \
+                    if (x_pawn > 0 and board[y][x_pawn - 1] == "p")\
                             or (x_pawn < 7 and board[y][x_pawn + 1] == "p"):
                         backward = True
                         break
                 if backward or Evaluation().isolated_pawn(board, player_turn):
                     continue
                 if y_pawn > 1:
-                    if (x_pawn > 0 and board[y_pawn - 2][x_pawn - 1] == "P") \
+                    if (x_pawn > 0 and board[y_pawn - 2][x_pawn - 1] == "P")\
                             or (x_pawn < 7 and board[y_pawn - 2][x_pawn + 1] == "P"):
                         backward = True
                 elif y_pawn > 0:
@@ -304,6 +306,79 @@ class Evaluation:
                         backward = True
 
             if backward:
-                score += 9
+                backward_score += 9
 
-        return score
+        return backward_score
+
+    @staticmethod
+    def connected_pawn_bonus(board, player_turn):
+        connected_score = 0
+        pawn_positions = np.where(board == "p" if player_turn == BLACK else board == "P")
+        seed = [0, 7, 8, 12, 29, 48, 86]
+
+        for i in range(0, len(pawn_positions[0])):
+            y_pawn, x_pawn = pawn_positions[0][i], pawn_positions[1][i]
+
+            if not Evaluation().connected_pawn(board, player_turn, y_pawn, x_pawn):
+                break
+
+            op = Evaluation().opposed_pawn(board, player_turn, y_pawn, x_pawn)
+            ph = Evaluation().phalanx_pawn(board, player_turn, y_pawn, x_pawn)
+            su = Evaluation().supported_pawn(board, player_turn, y_pawn, x_pawn)
+            r = 7 - y_pawn
+
+            if r < 2 or r > 7:
+                break
+
+            connected_score += (int(seed[r - 1] * (3 if ph else 2) / (2 if op else 1)) >> 0) + 17 * su
+
+        return connected_score
+
+    @staticmethod
+    def connected_pawn(board, player_turn, y_pawn, x_pawn):
+        if Evaluation().supported_pawn(board, player_turn, y_pawn, x_pawn)\
+                or Evaluation().phalanx_pawn(board, player_turn, y_pawn, x_pawn):
+            return True
+
+        return False
+
+    @staticmethod
+    def supported_pawn(board, player_turn, y_pawn, x_pawn):
+        supported_score = 0
+        if player_turn == WHITE:
+            if y_pawn < 7:
+                if x_pawn > 0 and board[y_pawn + 1][x_pawn - 1] == "P":
+                    supported_score += 1
+                if x_pawn < 7 and board[y_pawn + 1][x_pawn + 1] == "P":
+                    supported_score += 1
+        elif player_turn == BLACK:
+            if y_pawn > 0:
+                if x_pawn > 0 and board[y_pawn - 1][x_pawn - 1] == "p":
+                    supported_score += 1
+                if x_pawn < 7 and board[y_pawn - 1][x_pawn + 1] == "p":
+                    supported_score += 1
+
+        return supported_score
+
+    @staticmethod
+    def phalanx_pawn(board, player_turn, y_pawn, x_pawn):
+        pawn = "p" if player_turn == BLACK else "P"
+
+        if (x_pawn > 0 and board[y_pawn][x_pawn - 1] == pawn)\
+                or (x_pawn < 7 and board[y_pawn][x_pawn + 1] == pawn):
+            return 1
+
+        return 0
+
+    @staticmethod
+    def opposed_pawn(board, player_turn, y_pawn, x_pawn):
+        if player_turn == WHITE:
+            for y in range(7, y_pawn, -1):
+                if board[y][x_pawn] == "p":
+                    return 1
+        elif player_turn == BLACK:
+            for y in range(0, y_pawn):
+                if board[y][x_pawn] == "P":
+                    return 1
+
+        return 0

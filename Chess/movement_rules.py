@@ -63,7 +63,7 @@ class Movement:
         return moves
 
     @staticmethod
-    def get_pawn_moves( board, piece, x, y, moves):
+    def get_pawn_moves(board, piece, x, y, moves):
         if piece.isupper():
             if y < 7 and board[y + 1][x] == EMPTY_STATE:
                 moves.append([y + 1, x])
@@ -195,19 +195,38 @@ class Movement:
 
     @staticmethod
     def get_king_moves(board, x, y, moves):
-        if 0 <= y + 1 < 8 and 0 <= x - 1 < 8 and Movement.check_team(board, x, y, x - 1, y + 1):
+        if 0 <= y + 1 < 8 and 0 <= x - 1 < 8 and Movement.check_team(board, x, y, x - 1, y + 1)\
+                and not Movement.verify_king_check(board, x - 1, y + 1):
             moves.append([y + 1, x - 1])
-        if 0 <= y + 1 < 8 and 0 <= x < 8 and Movement.check_team(board, x, y, x, y + 1):
+        if 0 <= y + 1 < 8 and 0 <= x < 8 and Movement.check_team(board, x, y, x, y + 1)\
+                and not Movement.verify_king_check(board, x, y + 1):
             moves.append([y + 1, x])
-        if 0 <= y + 1 < 8 and 0 <= x + 1 < 8 and Movement.check_team(board, x, y, x + 1, y + 1):
+        if 0 <= y + 1 < 8 and 0 <= x + 1 < 8 and Movement.check_team(board, x, y, x + 1, y + 1)\
+                and not Movement.verify_king_check(board, x + 1, y + 1):
             moves.append([y + 1, x + 1])
-        if 0 <= y < 8 and 0 <= x - 1 < 8 and Movement.check_team(board, x, y, x - 1, y):
+        if 0 <= y < 8 and 0 <= x - 1 < 8 and Movement.check_team(board, x, y, x - 1, y)\
+                and not Movement.verify_king_check(board, x - 1, y):
             moves.append([y, x - 1])
-        if 0 <= y < 8 and 0 <= x + 1 < 8 and Movement.check_team(board, x, y, x + 1, y):
+        if 0 <= y < 8 and 0 <= x + 1 < 8 and Movement.check_team(board, x, y, x + 1, y)\
+                and not Movement.verify_king_check(board, x + 1, y):
             moves.append([y, x + 1])
-        if 0 <= y - 1 < 8 and 0 <= x - 1 < 8 and Movement.check_team(board, x, y, x - 1, y - 1):
+        if 0 <= y - 1 < 8 and 0 <= x - 1 < 8 and Movement.check_team(board, x, y, x - 1, y - 1)\
+                and not Movement.verify_king_check(board, x - 1, y - 1):
             moves.append([y - 1, x - 1])
-        if 0 <= y - 1 < 8 and 0 <= x < 8 and Movement.check_team(board, x, y, x, y - 1):
+        if 0 <= y - 1 < 8 and 0 <= x < 8 and Movement.check_team(board, x, y, x, y - 1)\
+                and not Movement.verify_king_check(board, x, y - 1):
             moves.append([y - 1, x])
-        if 0 <= y - 1 < 8 and 0 <= x + 1 < 8 and Movement.check_team(board, x, y, x + 1, y - 1):
+        if 0 <= y - 1 < 8 and 0 <= x + 1 < 8 and Movement.check_team(board, x, y, x + 1, y - 1)\
+                and not Movement.verify_king_check(board, x + 1, y - 1):
             moves.append([y - 1, x + 1])
+
+    @staticmethod
+    def verify_king_check(board, x_next, y_next):
+        for y in range(0, 8):
+            for x in range(0, 8):
+                if board[y][x] != EMPTY_STATE and board[y][x] != "k" and board[y][x] != "K":
+                    moves = Movement.get_moves(board, board[y][x], x, y)
+                    if [y_next, x_next] in moves:
+                        return True
+
+        return False
