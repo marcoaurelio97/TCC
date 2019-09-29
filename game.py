@@ -23,7 +23,7 @@ class Game:
                 if not self.game_over():
                     t = time()
                     if self.op == '1':
-                        y_curr, x_curr, y_next, x_next, eval_states = Minimax(3).get_minimax_move(self.chessboard, 1)
+                        y_curr, x_curr, y_next, x_next, eval_states = Minimax(2).get_minimax_move(self.chessboard, 1)
                     else:
                         y_curr, x_curr, y_next, x_next = get_player_move()
                     self.time_of_plays.append(round(time() - t, 3))
@@ -35,13 +35,17 @@ class Game:
 
                 if not self.game_over():
                     t = time()
-                    y_curr, x_curr, y_next, x_next, eval_states = Minimax(3).get_minimax_move(self.chessboard, -1)
+                    y_curr, x_curr, y_next, x_next, eval_states = Minimax(2).get_minimax_move(self.chessboard, -1)
                     self.time_of_plays.append(round(time() - t, 3))
                     self.evaluated_moves.append(eval_states)
 
                     self.chessboard.move(x_curr, y_curr, x_next, y_next)
                     self.play += 1
                     self.chessboard.print_board(self.play)
+
+                if self.play > 50:
+                    print(self.evaluated_moves)
+                    input()
 
             except Exception as ex:
                 input(traceback.format_exc())

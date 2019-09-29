@@ -32,7 +32,6 @@ class Minimax:
     @staticmethod
     def search(state, depth, player, alpha, beta):
         global evaluated_states
-        evaluated_states += 1
 
         if depth == 0:
             return '', state.get_score()
@@ -43,6 +42,7 @@ class Minimax:
         for child in state.children:
             eval_state, eval_value = Minimax.search(child, depth-1, -player, alpha, beta)
 
+            evaluated_states += 1
             if player == MAXIMAZING_PLAYER and best_value < eval_value:
                 best_value = eval_value
                 best_state = child
