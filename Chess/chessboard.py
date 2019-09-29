@@ -36,9 +36,10 @@ class Chessboard:
             ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r']
         ])
 
-    def print_board(self):
+    def print_board(self, play):
         clear()
         count = 7
+        print(f"Jogada: {play}")
         for y in range(7, -1, -1):
             line = str(count) + '  '
             count -= 1
