@@ -5,7 +5,7 @@ EMPTY_STATE = '.'
 
 MINIMAZING_PLAYER = -1
 MAXIMAZING_PLAYER = 1
-
+MINIMAX_DEPTH = 2
 evaluated_states = 0
 
 class Minimax:
@@ -17,7 +17,7 @@ class Minimax:
     def get_minimax_move(self, chessboard, player):
         initial_state = State(chessboard.board)
 
-        best_state, _ = Minimax.search(initial_state, self.depth, player, -infinite, infinite)
+        best_state, _ = Minimax.search(initial_state, self.depth, player)
 
         if best_state:
             global evaluated_states
@@ -30,31 +30,33 @@ class Minimax:
             raise Exception("Sorry but we could'n find the best move for this case!")
 
     @staticmethod
-    def search(state, depth, player, alpha, beta):
+    def search(state, depth, player):
         global evaluated_states
-        evaluated_states += 1
 
         if depth == 0:
-            return '', state.get_score()
+            return state, state.get_score()
 
         state.generate_children(player)
-        best_value = -infinite if player == MAXIMAZING_PLAYER else infinite
 
-        for child in state.children:
-            eval_state, eval_value = Minimax.search(child, depth-1, -player, alpha, beta)
+        if player == MINIMAZING_PLAYER:
+            best_value = -infinite
+            for child in state.children:
+                eval_state, eval_score = Minimax.search(child, depth - 1, -player)
 
-            if player == MAXIMAZING_PLAYER and best_value < eval_value:
-                best_value = eval_value
-                best_state = child
-                alpha = max(alpha, best_value)
-                if beta <= alpha:
-                    break
+                evaluated_states += 1
+                if eval_score > best_value:
+                    best_state = child
+                    best_value = eval_score
 
-            elif player == MINIMAZING_PLAYER and best_value > eval_value:
-                best_value = eval_value
-                best_state = child
-                beta = min(beta, best_value)
-                if beta <= alpha:
-                    break
+            return best_state, best_value
+        elif player == MAXIMAZING_PLAYER:
+            best_value = +infinite
+            for child in state.children:
+                eval_state, eval_score = Minimax.search(child, depth - 1, -player)
 
-        return best_state, best_value
+                evaluated_states += 1
+                if eval_score < best_value:
+                    best_state = child
+                    best_value = eval_score
+
+            return best_state, best_value
