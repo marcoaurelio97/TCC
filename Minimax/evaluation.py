@@ -12,13 +12,22 @@ class Evaluation:
         [-62, -53, -12, -4, 3, 13, 22, 28, 33],
         [-48, -20, 16, 26, 38, 51, 55, 63, 63, 68, 81, 81, 91, 98],
         [-58, -27, -15, -10, -5, -2, 9, 16, 30, 29, 32, 38, 46, 48, 58],
-        [-39, -21, 3, 3, 14, 22, 28, 41, 43, 48, 56, 60, 60, 66, 67, 70, 71, 73, 79, 88, 88, 99, 102, 102, 106, 109, 113, 116]
+        [-39, -21, 3, 3, 14, 22, 28, 41, 43, 48, 56, 60, 60, 66, 67, 70, 71, 73, 79, 88, 88, 99, 102, 102, 106, 109,
+         113, 116]
     ])
 
     king_attackers_weight = np.array([77, 55, 44, 10])
 
     @staticmethod
-    def evaluate(board):
+    def evaluate_black(board):
+        score = 0
+
+        score += Evaluation().material(board)
+
+        return score
+
+    @staticmethod
+    def evaluate_white(board):
         score = 0
 
         score += Evaluation().material(board)
@@ -26,7 +35,6 @@ class Evaluation:
         score += Evaluation().mobility(board, WHITE) - Evaluation().mobility(board, BLACK)
         score += Evaluation().king_safety(board, WHITE) - Evaluation().king_safety(board, BLACK)
         score += Evaluation().pawns_structure(board, WHITE) - Evaluation().pawns_structure(board, BLACK)
-
 
         return score
 
@@ -102,17 +110,19 @@ class Evaluation:
                 if player_turn == BLACK:
                     if board[y][x] == "q" or board[y][x] == "k":
                         mob_area_board[y][x] = 0
-                    if (y < 7 and x > 0 and board[y - 1][x - 1] == "P") or (y < 7 and x < 7 and board[y - 1][x + 1] == "P"):
+                    if (y < 7 and x > 0 and board[y - 1][x - 1] == "P")\
+                            or (y < 7 and x < 7 and board[y - 1][x + 1] == "P"):
                         mob_area_board[y][x] = 0
-                    if board[y][x] == "p" and (y > 4 or board[y-1][x] != EMPTY_STATE):
+                    if board[y][x] == "p" and (y > 4 or (y > 0 and board[y-1][x] != EMPTY_STATE)):
                         mob_area_board[y][x] = 0
 
                 if player_turn == WHITE:
                     if board[y][x] == "Q" or board[y][x] == "K":
                         mob_area_board[y][x] = 0
-                    if (y < 7 and x > 0 and board[y + 1][x - 1] == "p") or (y < 7 and x < 7 and board[y + 1][x + 1] == "p"):
+                    if (y < 7 and x > 0 and board[y + 1][x - 1] == "p")\
+                            or (y < 7 and x < 7 and board[y + 1][x + 1] == "p"):
                         mob_area_board[y][x] = 0
-                    if board[y][x] == "P" and (y < 3 or board[y+1][x] != EMPTY_STATE):
+                    if board[y][x] == "P" and (y < 3 or (y < 7 and board[y+1][x] != EMPTY_STATE)):
                         mob_area_board[y][x] = 0
 
         return mob_area_board
@@ -299,7 +309,6 @@ class Evaluation:
                                 king_ring_board[index_y][index_x] = 0
 
         return king_ring_board
-
 
     @staticmethod
     def pawns_structure(board, player_turn):
@@ -489,4 +498,3 @@ class Evaluation:
                     return 1
 
         return 0
-
