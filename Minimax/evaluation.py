@@ -23,6 +23,7 @@ class Evaluation:
         score = 0
 
         score += Evaluation().material(board)
+        # score += Evaluation().square(board)
 
         return score
 

@@ -35,7 +35,7 @@ class Game:
 
                     self.chessboard.move(x_curr, y_curr, x_next, y_next)
                     self.last_moves.append([y_curr, x_curr, y_next, x_next])
-                    if len(self.last_moves) > 5:
+                    if len(self.last_moves) > 6:
                         self.last_moves.pop(0)
                     self.play += 1
                     self.chessboard.print_board(self.play)
@@ -56,7 +56,7 @@ class Game:
 
                     self.chessboard.move(x_curr, y_curr, x_next, y_next)
                     self.last_moves.append([y_curr, x_curr, y_next, x_next])
-                    if len(self.last_moves) > 10:
+                    if len(self.last_moves) > 6:
                         self.last_moves.pop(0)
                     self.play += 1
                     self.chessboard.print_board(self.play)

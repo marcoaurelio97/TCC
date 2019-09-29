@@ -5,6 +5,7 @@ EMPTY_STATE = '.'
 
 MINIMAZING_PLAYER = -1
 MAXIMAZING_PLAYER = 1
+DEPTH_MINIMAX = 3
 
 evaluated_states = 0
 
@@ -26,8 +27,6 @@ class Minimax:
 
             return next_move
         else:
-            for move in initial_state.children:
-                print("Score: {}".format(move.score))
             raise Exception("Sorry but we could'n find the best move for this case!")
 
     @staticmethod
@@ -46,7 +45,7 @@ class Minimax:
             evaluated_states += 1
 
             repeated_move = False
-            if depth == 1:
+            if depth == DEPTH_MINIMAX:
                 if [eval_state.initial_y, eval_state.initial_x, eval_state.final_y, eval_state.final_x] in last_moves:
                     repeated_move = True
 
